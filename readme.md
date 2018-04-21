@@ -1,1 +1,47 @@
-Initial commit
+## Project requirements
+
+- We are going to build a word processor application called NewWord.
+
+- NewWord will enable a user to create a text document and apply various forms of formatting, all within the web browser.
+
+- We are going to focus one at a time on building each part of the application.
+
+- We are going then going to focus on building a clean structure
+
+- NewWord will be a reusable application. Not only will it work as a stand alone application, but it can be added to any other web application.
+
+## Resources
+
+### 20/04/18
+- Editor formatting:
+  - Document.execCommand():
+  - https://www.youtube.com/watch?v=mysAB7NAjDk
+  - https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
+
+- Codepen: Use execCommands to edit HTML content in your browser
+  - https://codepen.io/jrc16/pen/ELjeMV?editors=0010
+
+- addEventListener():
+  - https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+
+- document.querySelectorAll():
+  - https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll
+
+- get child elements (buttons) in the toolbar:
+  - Finding child element of parent pure javascript - https://stackoverflow.com/questions/16302045/finding-child-element-of-parent-pure-javascript
+  - How do I loop through children objects in javascript? - https://stackoverflow.com/questions/17094230/how-do-i-loop-through-children-objects-in-javascript
+  - Add Event Listener to Collection of HTML Elements - https://stackoverflow.com/questions/27834226/add-event-listener-to-collection-of-html-elements ( see comment 2 for what i used )
+
+
+### 21/04/18
+
+- Structure based on:
+  - https://github.com/jrcarney/greetr-custom-library/blob/added-jquery-support/Greetr.js
+
+- Document.createElement():
+  - https://developer.mozilla.org/en-US/docs/Web/API/Document/createElement
+  - https://codepen.io/pen/?editors=1010
+
+- Add string of HTML inside another element
+  - https://stackoverflow.com/questions/15741006/adding-div-element-to-body-or-document-in-javascript
+  - Add class to element - https://developer.mozilla.org/en-US/docs/Web/API/Element/classList

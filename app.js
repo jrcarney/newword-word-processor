@@ -1,13 +1,3 @@
-/**
- * # Project requirements
- *
- * - We are going to build a word processor called NewWord.
- * - NewWord will enable a user to create a text document and apply various forms of formatting, all within the web browser.
- * - We are going to focus one at a time on building each part of the pplication.
- * - We are going then going to focus on building a clean structure
- * - NewWord will be a reusable appplication. Not only will it work as a stand alone application, but it can be added to any other web application.
- */
-
 
 (function( global ) {
 
@@ -23,9 +13,14 @@
      * before the closing body tag
      */
     generateHtml: function() {
+      // # See readme: Document.createElement():
       // create a new div element
       var newDiv = document.createElement("div");
+
+      // # See readme: Add string of HTML inside another element
       newDiv.classList.add("newword-container");
+
+      // # See readme: Add string of HTML inside another element
       newDiv.innerHTML += '<div id="toolbar"><button id="bold" class="toolbar-buttons">Bold</button><button id="underline" class="toolbar-buttons">Underline</button></div><div id="content" contenteditable="true"></div>';
 
       // Add the newWord html just before the closing body tag
@@ -50,6 +45,7 @@
     }, 1000);
     /* // Word processor tutorial: END */
 
+    // See readme: Get child elements (buttons) in the toolbar
     for(var i=0; i<document.getElementById('toolbar').children.length; i++) {
       // debugger
       document.getElementById('toolbar').children[i].addEventListener('click', function(ev) {
