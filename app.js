@@ -1,10 +1,10 @@
 
 (function( global ) {
 
-  debugger
 
-  var newWord = function() {
-    return new newWord.Init();
+
+  var newWord = function( customVar ) {
+    return new newWord.Init( customVar );
   };
 
   newWord.prototype = {
@@ -13,6 +13,7 @@
      * before the closing body tag
      */
     generateHtml: function() {
+
       // # See readme: Document.createElement():
       // create a new div element
       var newDiv = document.createElement("div");
@@ -21,38 +22,60 @@
       newDiv.classList.add("newword-container");
 
       // # See readme: Add string of HTML inside another element
-      newDiv.innerHTML += '<div id="toolbar"><button id="bold" class="toolbar-buttons">Bold</button><button id="underline" class="toolbar-buttons">Underline</button></div><div id="content" contenteditable="true"></div>';
+      newDiv.innerHTML += '<div class="toolbar--" id="' + this.customVar + '-toolbar"><button id="bold-' + this.customVar + '-toolbar"  class="toolbar-buttons">Bold</button><button id="underline' + this.customVar + '-toolbar" class="toolbar-buttons">Underline</button></div><div id="' + this.customVar +  '" contenteditable="true"></div>';
 
       // Add the newWord html just before the closing body tag
       var currentDiv = document.getElementById("body");
       document.body.appendChild(newDiv, currentDiv);
+    },
+
+    saveToLocalStorage: function() {
+
+      /**
+       * Word processor tutorial: BEGIN
+       * tutorial @ https://enlight.nyc/text-editor
+       */
+
+       // add new content to each dedicated editor
+       // -
+      var content = document.getElementById( this.customVar );
+      content.innerHTML = localStorage[ this.customVar ] || 'Just Write';
+
+      setInterval(function() {
+        localStorage[ content.id ] = content.innerHTML;
+      }, 1000);
+      /* // Word processor tutorial: END */
+    },
+
+    setToolbar: function() {
+      // debugger
+      // See readme: Get child elements (buttons) in the toolbar
+      for(var i=0; i<document.getElementById( this.customVar+'-toolbar' ).children.length; i++) {
+        // debugger
+        document.getElementById( this.customVar+'-toolbar' ).children[i].addEventListener('click', function(ev) {
+          debugger
+          if( this.id === ev.srcElement.id ) {
+            document.execCommand(this.innerText.toLowerCase(), false, null);
+          }
+        });
+      }
     }
+
+
   }; // end newWord.prototype
 
-  newWord.Init = function() {
-  var self = this;
+  newWord.Init = function( customVar ) {
+    var self = this;
+
+    self.customVar = customVar || "content";
+
     self.generateHtml();
 
-    /**
-     * Word processor tutorial: BEGIN
-     * tutorial @ https://enlight.nyc/text-editor
-     */
-    var content = document.getElementById('content');
-    content.innerHTML = localStorage['content'] || 'Just Write';
+    self.saveToLocalStorage();
 
-    setInterval(function() {
-      localStorage['content'] = content.innerHTML;
-    }, 1000);
-    /* // Word processor tutorial: END */
+    self.setToolbar();
 
-    // See readme: Get child elements (buttons) in the toolbar
-    for(var i=0; i<document.getElementById('toolbar').children.length; i++) {
-      // debugger
-      document.getElementById('toolbar').children[i].addEventListener('click', function(ev) {
-        // debugger
-        document.execCommand(ev.srcElement.id, false, null);
-      });
-    }
+
   }
 
 //   /**
@@ -86,7 +109,9 @@
  */
 
 	// create a new greetr object without the need to use the new keyword (due to Greetr.js' architecture)
-	var g = newWord();
+	var doc1 = newWord("word-doc-1");
+
+  var doc2 = newWord("word-doc-2");
 
 // -- Unused code ------------------------------------------ //
 

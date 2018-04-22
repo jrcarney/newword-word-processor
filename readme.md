@@ -45,3 +45,11 @@
 - Add string of HTML inside another element
   - https://stackoverflow.com/questions/15741006/adding-div-element-to-body-or-document-in-javascript
   - Add class to element - https://developer.mozilla.org/en-US/docs/Web/API/Element/classList
+
+### 22/04/18
+
+- progress:
+  - 'Separated Init() functionality into to separate methods.
+  - Toolbars control separate areas however, which needs to rectified
+    - Not sure if i can isolate the execCommand() to operate on a specific part of the text that is selected
+    - NOTE: I will probably have to enable only one editor on screen, perhaps use singleton pattern?
