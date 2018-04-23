@@ -53,3 +53,7 @@
   - Toolbars control separate areas however, which needs to rectified
     - Not sure if i can isolate the execCommand() to operate on a specific part of the text that is selected
     - NOTE: I will probably have to enable only one editor on screen, perhaps use singleton pattern?
+
+- Switching over to the Module Pattern:
+  - Addy Design Patterns: https://addyosmani.com/resources/essentialjsdesignpatterns/book/#modulepatternjavascript
+  - 4 JavaScript Design Patterns You Should Know: https://www.evernote.com/shard/s424/nl/68042563/290946cb-175c-4f56-9841-2211880bc881/
