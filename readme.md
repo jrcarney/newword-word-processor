@@ -19,7 +19,7 @@
 progress
 
 - Broke up the project into separate module pattern and psuedo classical pattern folders, to distinctly separate the 2.
-
+- Added createToolbarButtons() function which takes care of adding formatting buttons to the toolbar.
 
 ### 22/04/18
 
