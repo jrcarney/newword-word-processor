@@ -20,6 +20,7 @@
 
 - Broke up the project into separate module pattern and psuedo classical pattern folders, to distinctly separate the 2.
 - Added createToolbarButtons() function which takes care of adding formatting buttons to the toolbar.
+  - Made use of template literals: https://css-tricks.com/template-literals/
 
 ---
 
