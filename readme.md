@@ -23,6 +23,7 @@
 - Added some validation to setToolbar, enabling window prompt for backgroundColor formatter.
   - borrowed idea form https://codepen.io/jrc16/pen/ELjeMV?editors=0010
 - Added custom `data-enableprompt` data attribute which checks whether a formatter should allow the prompt to display.
+  - see [JavaScript access](https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes) for getting hold of the attribute in the script.
 
 ---
 
