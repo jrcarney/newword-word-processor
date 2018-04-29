@@ -23,7 +23,8 @@ var newWord = (function() {
         "name": "Remove Highlight",
         "cmd": "backColor",
         "title": "Remove background colour from the selected text",
-        "value": "transparent"
+        "value": "transparent",
+        "enableprompt": ""
       },
       {
         "name": "under-line",

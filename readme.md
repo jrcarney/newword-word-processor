@@ -16,6 +16,16 @@
 
 ## Progress
 
+### 28/04/18
+- Added some more formatting options.
+- Created commands object to hold settings for each formatting button.
+  - borrowed idea form https://codepen.io/jrc16/pen/ELjeMV?editors=0010
+- Added some validation to setToolbar, enabling window prompt for backgroundColor formatter.
+  - borrowed idea form https://codepen.io/jrc16/pen/ELjeMV?editors=0010
+- Added custom `data-enableprompt` data attribute which checks whether a formatter should allow the prompt to display.
+
+---
+
 ### 27/04/18
 
 - Broke up the project into separate module pattern and psuedo classical pattern folders, to distinctly separate the 2.
