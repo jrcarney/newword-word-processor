@@ -3,6 +3,36 @@ var newWord = (function() {
 //debugger
 
     /** # Priavate properties **/
+    var commands = [
+      {
+        "name": "Highlight",
+        "cmd": "backColor",
+        "title": "Add the selected colour to the selected text",
+        "value": "yellow",
+        "enableprompt": "true"
+      },
+      {
+        "name": "bold",
+        "cmd": "bold",
+        "title": "Make the selected text emboldened",
+        "value": "",
+        "enableprompt": ""
+
+      },
+      {
+        "name": "Remove Highlight",
+        "cmd": "backColor",
+        "title": "Remove background colour from the selected text",
+        "value": "transparent"
+      },
+      {
+        "name": "under-line",
+        "cmd": "underline",
+        "title": "",
+        "value": "",
+        "enableprompt": ""
+      }
+    ];
 
     /** # Priavate methods **/
      /**
@@ -42,24 +72,24 @@ var newWord = (function() {
      */
     var createToolbarButtons = function() {
 
-      var commands = [{
-        "name": "underline",
-      	"cmd": "underline",
-      	"val": "...",
-      	"desc": "...)"
-        },
-        {
-          "name": "bold",
-        	"cmd": "bold",
-        	"icon": "bold",
-        	"desc": "Toggles bold on/off for the selection or at the insertion point. (Internet Explorer uses the STRONG tag instead of B.)"
-      }];
+      // var commands = [{
+      //   "name": "underline",
+      // 	"cmd": "underline",
+      // 	"val": "...",
+      // 	"desc": "...)"
+      //   },
+      //   {
+      //     "name": "bold",
+      //   	"cmd": "bold",
+      //   	"icon": "bold",
+      //   	"desc": "Toggles bold on/off for the selection or at the insertion point. (Internet Explorer uses the STRONG tag instead of B.)"
+      // }];
 
       var buttons = "";
       for(i=0; i<commands.length; i++) {
         console.log(commands[i]);
         var command = commands[i];
-        buttons += `<button id="${command.cmd}-${newWord.docEditorId}-toolbar" class="toolbar-buttons">${command.name}</button>`;
+        buttons += `<button id="${command.cmd}-${newWord.docEditorId}-toolbar" class="toolbar-buttons" name="${command.cmd}" title="${command.title}" value="${command.value}" data-enableprompt="${command.enableprompt}">${command.name}</button>`;
       }
 
 debugger
@@ -96,7 +126,17 @@ debugger
         // debugger
         toolbar.children[i].addEventListener('click', function(ev) {
           debugger
-          document.execCommand(this.innerText.toLowerCase(), false, null);
+          var val = "";
+
+          if( this.dataset.enableprompt === "true" ) {
+            val = prompt("Value for " + this.name + "?", val);
+
+            val = val || "";
+
+          } else {
+            val = this.value;
+          }
+          document.execCommand(this.name, false, ( val || ""));
         });
       }
     };
