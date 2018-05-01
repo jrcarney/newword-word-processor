@@ -35,7 +35,8 @@ var newWord = (function() {
       }
     ];
 
-    /** # Priavate methods **/
+    /** # Private methods **/
+
      /**
      * Creates the newWord html (needed by the application) and adds it
      * before the closing body tag
@@ -93,15 +94,13 @@ var newWord = (function() {
         buttons += `<button id="${command.cmd}-${newWord.docEditorId}-toolbar" class="toolbar-buttons" name="${command.cmd}" title="${command.title}" value="${command.value}" data-enableprompt="${command.enableprompt}">${command.name}</button>`;
       }
 
-debugger
-
       var editor = document.getElementById( newWord.docEditorId+'-toolbar' );
       editor.innerHTML += buttons;
 
     };
 
     var saveToLocalStorage = function() {
-// debugger
+
       /**
        * Word processor tutorial: BEGIN
        * tutorial @ https://enlight.nyc/text-editor
@@ -109,11 +108,17 @@ debugger
 
        // add new content to each dedicated editor
        // -
+       //debugger
       var content = document.getElementById( newWord.docEditorId );
-      content.innerHTML = localStorage[ newWord.docEditorId] || 'Just Write';
+      //localStorage[ newWord.docEditorId] = "";
+      //localStorage.removeItem( newWord.docEditorId  );
+      content.innerHTML = localStorage.getItem( newWord.docEditorId ) || 'Just Write';
 
-      setInterval(function() {
-        localStorage[ content.id ] = content.innerHTML;
+      newWord.timer = setInterval(function() {
+        debugger
+        // localStorage.removeItem( newWord.docEditorId  );
+        // localStorage[ newWord.docEditorId  ] = "";
+        localStorage.setItem( newWord.docEditorId ,document.getElementById( newWord.docEditorId ).innerHTML);
       }, 1000);
       /* // Word processor tutorial: END */
     };
@@ -124,14 +129,12 @@ debugger
 
       // See readme: Get child elements (buttons) in the toolbar
       for(var i=0; i<toolbar.children.length; i++) {
-        // debugger
+
         toolbar.children[i].addEventListener('click', function(ev) {
-          debugger
           var val = "";
 
           if( this.dataset.enableprompt === "true" ) {
             val = prompt("Value for " + this.name + "?", val);
-
             val = val || "";
 
           } else {
@@ -140,20 +143,53 @@ debugger
           document.execCommand(this.name, false, ( val || ""));
         });
       }
+
     };
 
+    /**
+     * @JC 1/05/18: may not need this method keep just in case if tings start to mess up
+     * Alternatively jsut use chrome private mode which seesm to work better.
+     * its possible that extensions are cuasing the issue?
+     *
+     * To avoid any weird chrome / browser issues with not writing new content
+     * to local storage, save() clears the timer, sets editor to nothing and
+     * writes the new content to it
+     *
+     */
+    var save = function() {
+      debugger
+      clearInterval(newWord.timer);
+      // newWord.timer = 0;
+      localStorage.setItem( newWord.docEditorId, "");
+      localStorage.setItem( newWord.docEditorId, document.getElementById( newWord.docEditorId ).innerHTML);
+    };
 
     return {
+      // # public methods # //
       init: function( docEditorId ) {
         setDocEditorId( docEditorId );
         generateHtml();
         saveToLocalStorage();
         setToolbar();
+        // addButtonSaveHandler( enableSaveBtn );
         console.log("Initialised app");
+      },
+      changeTheme: function( theme ) {
+        if( theme === 'dark' ) {
+          var editor = document.getElementById( newWord.docEditorId );
+          editor.style.backgroundColor = '#383737';
+          editor.style.color = '#fff';
+          document.getElementById('body').style.backgroundColor = 'grey';
+        }
+      },
+      // just beofre
+      exitApp: window.onbeforeunload = function(event) {
+        save();
       }
+
     };
 
 })();
 
-var doc1 = newWord.init();
-//var doc2 = newWord.init('blah');
+newWord.init("megatron");
+newWord.changeTheme('dark');
