@@ -16,6 +16,11 @@
 
 ## Progress
 
+### 10/08/18
+- New document functionality added
+- Document selection functionality added
+- Default parameters adde to init()
+
 ### 28/04/18
 - Added some more formatting options.
 - Created commands object to hold settings for each formatting button.
