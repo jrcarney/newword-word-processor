@@ -59,7 +59,6 @@ var newWord = (function() {
         docSelectorContainer.appendChild( localStorageItem );
 
         localStorageItem.addEventListener('click', function(ev) {
-          debugger
           clearInterval( newWord.timer );
 
           console.log("// ev.srcElement.innerHTML is "+ev.srcElement.innerHTML);
@@ -76,6 +75,10 @@ var newWord = (function() {
     var newDocument = function() {
       document.querySelector( '#new-document' ).addEventListener('click', function(ev) {
         debugger
+
+        // @JC 13/08/18: set flag so we can save documents after one has been deleted
+        newWord.documentDeleted = 0;
+
         console.log("clled newDocument");
         newWord.documentName = prompt("Name of document","");
 
@@ -186,7 +189,6 @@ var newWord = (function() {
 
        // add new content to each dedicated editor
        // -
-        debugger
 
        if( !docName ) {
          var docName = newWord.docEditorContent;
@@ -205,7 +207,9 @@ var newWord = (function() {
           newWord.documentName = newWord.docEditorContent ;
         }
 
-        localStorage.setItem( newWord.documentName, document.getElementById( newWord.docEditorContent ).innerHTML);
+        if( newWord.documentDeleted !== 1 ) {
+          localStorage.setItem( newWord.documentName, document.getElementById( newWord.docEditorContent ).innerHTML);
+        }
       }, 500);
       /* // Word processor tutorial: END */
     };
@@ -260,6 +264,29 @@ var newWord = (function() {
       }
     };
 
+    var deleteDocument = function() {
+      document.getElementById('delete-document').addEventListener('click', function() {
+        console.log('delete-document reached');
+debugger
+        localStorage.removeItem( newWord.documentName );
+        document.getElementById( newWord.docEditorContent ).innerHTML = "No document selected";
+
+        newWord.documentDeleted = 1;
+
+        // @JC 10/08/18: remove the previous docuemtn list as now want to create a
+        // new one with the newly added doc
+        var bodyp = document.querySelector('#body');
+        var s = document.querySelector( '.doc-selector-container' );
+        bodyp.removeChild( s );
+
+
+        // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
+        setTimeout(function() {
+          selectDocument();
+        }, 600);
+      });
+    };
+
     return {
       // # public methods # //
       init: function( params ) {
@@ -288,6 +315,8 @@ var newWord = (function() {
         setToolbar();
 
         changeTheme( params.themeColor );
+
+        deleteDocument();
         // addButtonSaveHandler( enableSaveBtn );
         console.log("Initialised app");
       },
