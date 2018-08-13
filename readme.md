@@ -16,6 +16,9 @@
 
 ## Progress
 
+### 13/08/18
+- Added document deletion functionality
+
 ### 10/08/18
 - New document functionality added
 - Document selection functionality added
