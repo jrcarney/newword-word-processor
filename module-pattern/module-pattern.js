@@ -79,39 +79,6 @@ var newWord = (function() {
       }
     };
 
-    // @JC 10/08/18: creates a new document when the user clicks the 'new document' button
-    var newDocument = function() {
-      document.querySelector( '#new-document' ).addEventListener('click', function(ev) {
-        debugger
-
-        // @JC 13/08/18: set flag so we can save documents after one has been deleted
-        newWord.documentDeleted = 0;
-
-        console.log("clled newDocument");
-        newWord.documentName = prompt("Name of document","");
-
-        // @JC 10/08/18: clear the timer so we are not createing multuple timers
-        clearInterval( newWord.timer );
-
-        // @JC 10/08/18: addthe new docuemtn to localStorageItem
-        newDocumentLocalStorage( newWord.documentName );
-
-        // @JC 10/08/18: remove the previous docuemtn list as now want to create a
-        // new one with the newly added doc
-        var bodyp = document.querySelector('#body');
-        var s = document.querySelector( '.doc-selector-container' );
-        bodyp.removeChild( s );
-
-        // Display the text editor area
-        var a = document.getElementsByClassName("newword-container");
-        a[0].style.display = "block"
-
-        // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
-        setTimeout(function() {
-          selectDocument();
-        }, 600);
-      } );
-    };
 
      /**
      * Creates the newWord html (needed by the application) and adds it
@@ -275,6 +242,48 @@ var newWord = (function() {
       });
     };
 
+
+    /** # Async methods **/
+
+    /**
+     * @JC 10/08/18:
+     *
+     * Creates a new document when the user clicks the 'new document' button
+     */
+    var newDocument = function() {
+      document.querySelector( '#new-document' ).addEventListener('click', function(ev) {
+        debugger
+
+        // @JC 13/08/18: set flag so we can save documents after one has been deleted
+        newWord.documentDeleted = 0;
+
+        console.log("clled newDocument");
+        newWord.documentName = prompt("Name of document","");
+
+        // @JC 10/08/18: clear the timer so we are not createing multuple timers
+        clearInterval( newWord.timer );
+
+        // @JC 10/08/18: addthe new docuemtn to localStorageItem
+        newDocumentLocalStorage( newWord.documentName );
+
+        // @JC 10/08/18: remove the previous docuemtn list as now want to create a
+        // new one with the newly added doc
+        var bodyp = document.querySelector('#body');
+        var s = document.querySelector( '.doc-selector-container' );
+        bodyp.removeChild( s );
+
+        // Display the text editor area
+        var a = document.getElementsByClassName("newword-container");
+        a[0].style.display = "block"
+
+        // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
+        setTimeout(function() {
+          selectDocument();
+        }, 600);
+      } );
+    };
+
+
     return {
       // # public methods # //
       init: function( params ) {
@@ -286,11 +295,6 @@ var newWord = (function() {
           params.themeColor = "light";
         }
 
-        // debugger
-
-        //selectDocument();
-
-        newDocument();
         setDocEditorId( params.editorName || "newword" );
         // newWord.docEditorId = params.editorName || "newword-editor";
 
@@ -311,7 +315,9 @@ var newWord = (function() {
         deleteDocument();
         // addButtonSaveHandler( enableSaveBtn );
 
-        promptSelectDocument();
+        /** # Async method calls **/
+
+        newDocument();
 
         console.log("Initialised app");
       },
@@ -321,7 +327,6 @@ var newWord = (function() {
       // exitApp: window.onbeforeunload = function(event) {
       //  save();
       // }
-
     }
 
 })();
