@@ -64,6 +64,14 @@ var newWord = (function() {
           console.log("// ev.srcElement.innerHTML is "+ev.srcElement.innerHTML);
           newWord.documentName = ev.srcElement.innerHTML;
           newDocumentLocalStorage( newWord.documentName );
+
+          // @JC 26/8/18:  Display the text editor area
+          var a = document.getElementsByClassName("newword-container");
+          a[0].style.display = "block"
+
+          // @JC 26/8/18: remove selet or create document message
+          var b = document.getElementById('temp-msg');
+          b.style.display = 'none';
         });
 
         var bodyDiv = document.getElementById("body");
@@ -94,6 +102,10 @@ var newWord = (function() {
         var s = document.querySelector( '.doc-selector-container' );
         bodyp.removeChild( s );
 
+        // Display the text editor area
+        var a = document.getElementsByClassName("newword-container");
+        a[0].style.display = "block"
+
         // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
         setTimeout(function() {
           selectDocument();
@@ -112,7 +124,6 @@ var newWord = (function() {
      };
 
     var generateHtml = function() {
-
       //var setDocEditorId = setDocEditorId();
 
       // # See readme: Document.createElement():
@@ -121,6 +132,7 @@ var newWord = (function() {
 
       // # See readme: Add string of HTML inside another element
       newDiv.classList.add("newword-container");
+      newDiv.style.display = "none"
 
       // # See readme: Add string of HTML inside another element
       newDiv.innerHTML += `<div id="${newWord.docEditorToolbar}"></div><div id="${newWord.docEditorContent}" contenteditable="true"></div>`;
@@ -151,29 +163,29 @@ var newWord = (function() {
 
     };
 
-    var saveToLocalStorage = function() {
-
-      /**
-       * Word processor tutorial: BEGIN
-       * tutorial @ https://enlight.nyc/text-editor
-       */
-
-       // add new content to each dedicated editor
-       // -
-       //debugger
-      var content = document.getElementById( newWord.docEditorContent );
-      //localStorage[ newWord.docEditorId] = "";
-      //localStorage.removeItem( newWord.docEditorId  );
-      content.innerHTML = localStorage.getItem( newWord.docEditorContent ) || 'Just Write';
-
-      newWord.timer = setInterval(function() {
-        //debugger
-        // localStorage.removeItem( newWord.docEditorId  );
-        // localStorage[ newWord.docEditorId  ] = "";
-        localStorage.setItem( newWord.docEditorContent, document.getElementById( newWord.docEditorContent ).innerHTML);
-      }, 1000);
-      /* // Word processor tutorial: END */
-    };
+    // var saveToLocalStorage = function() {
+    //
+    //   /**
+    //    * Word processor tutorial: BEGIN
+    //    * tutorial @ https://enlight.nyc/text-editor
+    //    */
+    //
+    //    // add new content to each dedicated editor
+    //    // -
+    //    //debugger
+    //   var content = document.getElementById( newWord.docEditorContent );
+    //   //localStorage[ newWord.docEditorId] = "";
+    //   //localStorage.removeItem( newWord.docEditorId  );
+    //   content.innerHTML = localStorage.getItem( newWord.docEditorContent ) || 'Just Write';
+    //
+    //   newWord.timer = setInterval(function() {
+    //     //debugger
+    //     // localStorage.removeItem( newWord.docEditorId  );
+    //     // localStorage[ newWord.docEditorId  ] = "";
+    //     localStorage.setItem( newWord.docEditorContent, document.getElementById( newWord.docEditorContent ).innerHTML);
+    //   }, 1000);
+    //   /* // Word processor tutorial: END */
+    // };
 
 
     /**
@@ -199,12 +211,13 @@ var newWord = (function() {
       content.innerHTML = localStorage.getItem( docName ) || 'Just Write';
 
       newWord.newDocumentTimer = setInterval(function() {
-        //debugger
+        // debugger
         // localStorage.removeItem( newWord.docEditorId  );
         // localStorage[ newWord.docEditorId  ] = "";
 
         if( !newWord.documentName ) {
-          newWord.documentName = newWord.docEditorContent ;
+          // newWord.documentName = newWord.docEditorContent ;
+          return;
         }
 
         if( newWord.documentDeleted !== 1 ) {
@@ -267,7 +280,7 @@ var newWord = (function() {
     var deleteDocument = function() {
       document.getElementById('delete-document').addEventListener('click', function() {
         console.log('delete-document reached');
-debugger
+
         localStorage.removeItem( newWord.documentName );
         document.getElementById( newWord.docEditorContent ).innerHTML = "No document selected";
 
@@ -287,6 +300,21 @@ debugger
       });
     };
 
+    var promptSelectDocument = function() {
+
+      // var p = document.createElement("p");
+      // var textnode = document.createTextNode("Water");
+      // p.appendChild(textnode);
+      //
+      // debugger
+      //
+      // var existingNode = document.getElementsByClassName("newword-container");
+      // existingNode[0].insertBefore(p, existingNode[0].childNodes[0]);
+
+      // var b = document.getElementById('temp-msg');
+      // b.
+    };
+
     return {
       // # public methods # //
       init: function( params ) {
@@ -298,15 +326,19 @@ debugger
           params.themeColor = "light";
         }
 
-        // @JC 10/08/18: prpmpt user after page load to select a document from
-        // localStorage
-        selectDocument();
+        // debugger
+
+        //selectDocument();
 
         newDocument();
         setDocEditorId( params.editorName || "newword" );
         // newWord.docEditorId = params.editorName || "newword-editor";
 
         generateHtml();
+
+        // @JC 10/08/18: prpmpt user after page load to select a document from
+        // localStorage
+        selectDocument();
 
         // @JC 10/08/18: commened out so to try and use a refactored localStorage
         // saveToLocalStorage();
@@ -318,6 +350,9 @@ debugger
 
         deleteDocument();
         // addButtonSaveHandler( enableSaveBtn );
+
+        promptSelectDocument();
+
         console.log("Initialised app");
       },
 
