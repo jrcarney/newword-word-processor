@@ -37,8 +37,93 @@ var newWord = (function() {
 
     /** # Private methods **/
 
-    // @JC 10/08/18: display a list of the currently save documents, ie,
-    // eveurting stored in localStorage
+     /**
+     * Creates the newWord html (needed by the application) and adds it
+     * before the closing body tag
+     */
+     var setDocEditorId = function( docEditorId ) {
+       newWord.docEditorId = docEditorId;
+       newWord.docEditorToolbar = docEditorId+"-toolbar";
+       newWord.docEditorContent = docEditorId+"-content";
+     };
+
+     /**
+      * START: Create the word processor html
+      */
+    var generateHtml = function() {
+      //var setDocEditorId = setDocEditorId();
+
+      // # See readme: Document.createElement():
+      // create a new div element
+      // var newDiv = document.createElement("div");
+
+      // # See readme: Add string of HTML inside another element
+      // newDiv.classList.add("newword-container");
+      // newDiv.style.display = "none"
+
+      var newWordContainer = document.getElementById('newword-container');
+      newWordContainer.style.display = "none";
+
+      // # See readme: Add string of HTML inside another element
+      newWordContainer.innerHTML += `<div id="${newWord.docEditorToolbar}"></div><div id="${newWord.docEditorContent}" contenteditable="true"></div>`;
+
+      // Add the newWord html just before the closing body tag
+      // var currentDiv = document.getElementById("body");
+      // document.body.appendChild(newDiv, newWordContainer);
+
+      createToolbarButtons();
+    };
+
+    /**
+     * @TODO
+     * - high priority: add some more buttons.
+     * - low priority: enable the implementation to enable / disable buttons.
+     */
+    var createToolbarButtons = function() {
+      var buttons = "";
+      for(i=0; i<commands.length; i++) {
+        console.log(commands[i]);
+        var command = commands[i];
+        buttons += `<button id="${command.cmd}-${newWord.docEditorToolbar}" class="toolbar-buttons" name="${command.cmd}" title="${command.title}" value="${command.value}" data-enableprompt="${command.enableprompt}">${command.name}</button>`;
+      }
+
+      var editor = document.getElementById( newWord.docEditorToolbar );
+      editor.innerHTML += buttons;
+
+      setToolbar();
+    };
+
+    var setToolbar = function() {
+      var toolbar = document.getElementById( newWord.docEditorToolbar );
+
+      // See readme: Get child elements (buttons) in the toolbar
+      for(var i=0; i<toolbar.children.length; i++) {
+
+        toolbar.children[i].addEventListener('click', function(ev) {
+          var val = "";
+
+          if( this.dataset.enableprompt === "true" ) {
+            val = prompt("Value for " + this.name + "?", val);
+            val = val || "";
+
+          } else {
+            val = this.value;
+          }
+          document.execCommand(this.name, false, ( val || ""));
+        });
+      }
+    };
+
+    /**
+     * END: Create the word processor html
+     */
+
+    /**
+     * @JC 10/08/18:
+     *
+     * Display a list of the currently save documents, ie,
+     * everything stored in localStorage
+     */
     var selectDocument = function() {
       // get the localStorage object then calle newDocumentLocalStorage and
       // pass the user selected document
@@ -66,8 +151,8 @@ var newWord = (function() {
           newDocumentLocalStorage( newWord.documentName );
 
           // @JC 26/8/18:  Display the text editor area
-          var a = document.getElementsByClassName("newword-container");
-          a[0].style.display = "block"
+          var a = document.getElementById("newword-container");
+          a.style.display = "block"
 
           // @JC 26/8/18: remove selet or create document message
           var b = document.getElementById('temp-msg');
@@ -79,86 +164,26 @@ var newWord = (function() {
       }
     };
 
-
-     /**
-     * Creates the newWord html (needed by the application) and adds it
-     * before the closing body tag
-     */
-     var setDocEditorId = function( docEditorId ) {
-       newWord.docEditorId = docEditorId;
-       newWord.docEditorToolbar = docEditorId+"-toolbar";
-       newWord.docEditorContent = docEditorId+"-content";
-     };
-
-    var generateHtml = function() {
-      //var setDocEditorId = setDocEditorId();
-
-      // # See readme: Document.createElement():
-      // create a new div element
-      var newDiv = document.createElement("div");
-
-      // # See readme: Add string of HTML inside another element
-      newDiv.classList.add("newword-container");
-      newDiv.style.display = "none"
-
-      // # See readme: Add string of HTML inside another element
-      newDiv.innerHTML += `<div id="${newWord.docEditorToolbar}"></div><div id="${newWord.docEditorContent}" contenteditable="true"></div>`;
-
-      // Add the newWord html just before the closing body tag
-      var currentDiv = document.getElementById("body");
-      document.body.appendChild(newDiv, currentDiv);
-
-      createToolbarButtons();
-    };
-
     /**
-     * @TODO
-     * - high priority: add some more buttons.
-     * - low priority: enable the implementation to enable / disable buttons.
-     */
-    var createToolbarButtons = function() {
-
-      var buttons = "";
-      for(i=0; i<commands.length; i++) {
-        console.log(commands[i]);
-        var command = commands[i];
-        buttons += `<button id="${command.cmd}-${newWord.docEditorToolbar}" class="toolbar-buttons" name="${command.cmd}" title="${command.title}" value="${command.value}" data-enableprompt="${command.enableprompt}">${command.name}</button>`;
-      }
-
-      var editor = document.getElementById( newWord.docEditorToolbar );
-      editor.innerHTML += buttons;
-
-    };
-
-    /**
-     *  @JC 10/08/18: this is basically the same as teh saveToLocalStorage method above,
-     * i need to probalby remove the saveToLocalStorage method and do some tidy up in this method
+     *  @JC 10/08/18:
+     *
+     * - Once a document has been selected, regularly save it to local storage
+     * - If no document has been selected, then dont display any document
      */
     var newDocumentLocalStorage = function( docName ) {
-
       /**
        * Word processor tutorial: BEGIN
        * tutorial @ https://enlight.nyc/text-editor
        */
-
        // add new content to each dedicated editor
        // -
-
        if( !docName ) {
          var docName = newWord.docEditorContent;
        }
-
       var content = document.getElementById( newWord.docEditorContent );
-
       content.innerHTML = localStorage.getItem( docName ) || 'Just Write';
-
       newWord.newDocumentTimer = setInterval(function() {
-        // debugger
-        // localStorage.removeItem( newWord.docEditorId  );
-        // localStorage[ newWord.docEditorId  ] = "";
-
         if( !newWord.documentName ) {
-          // newWord.documentName = newWord.docEditorContent ;
           return;
         }
 
@@ -169,47 +194,9 @@ var newWord = (function() {
       /* // Word processor tutorial: END */
     };
 
-    var setToolbar = function() {
-
-      var toolbar = document.getElementById( newWord.docEditorToolbar );
-
-      // See readme: Get child elements (buttons) in the toolbar
-      for(var i=0; i<toolbar.children.length; i++) {
-
-        toolbar.children[i].addEventListener('click', function(ev) {
-          var val = "";
-
-          if( this.dataset.enableprompt === "true" ) {
-            val = prompt("Value for " + this.name + "?", val);
-            val = val || "";
-
-          } else {
-            val = this.value;
-          }
-          document.execCommand(this.name, false, ( val || ""));
-        });
-      }
-
-    };
-
     /**
-     * @JC 1/05/18: may not need this method keep just in case if tings start to mess up
-     * Alternatively jsut use chrome private mode which seesm to work better.
-     * its possible that extensions are cuasing the issue?
-     *
-     * To avoid any weird chrome / browser issues with not writing new content
-     * to local storage, save() clears the timer, sets editor to nothing and
-     * writes the new content to it
-     *
+     * Change the theme of the editor
      */
-    var save = function() {
-      // debugger
-      clearInterval(newWord.timer);
-      // newWord.timer = 0;
-      localStorage.setItem( newWord.docEditorId, "");
-      localStorage.setItem( newWord.docEditorId, document.getElementById( newWord.docEditorId ).innerHTML);
-    };
-
     var changeTheme = function( theme ) {
       if( theme === 'dark' ) {
         var editor = document.getElementById( newWord.docEditorContent );
@@ -218,30 +205,6 @@ var newWord = (function() {
         document.getElementById('body').style.backgroundColor = 'grey';
       }
     };
-
-    var deleteDocument = function() {
-      document.getElementById('delete-document').addEventListener('click', function() {
-        console.log('delete-document reached');
-
-        localStorage.removeItem( newWord.documentName );
-        document.getElementById( newWord.docEditorContent ).innerHTML = "No document selected";
-
-        newWord.documentDeleted = 1;
-
-        // @JC 10/08/18: remove the previous docuemtn list as now want to create a
-        // new one with the newly added doc
-        var bodyp = document.querySelector('#body');
-        var s = document.querySelector( '.doc-selector-container' );
-        bodyp.removeChild( s );
-
-
-        // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
-        setTimeout(function() {
-          selectDocument();
-        }, 600);
-      });
-    };
-
 
     /** # Async methods **/
 
@@ -273,8 +236,8 @@ var newWord = (function() {
         bodyp.removeChild( s );
 
         // Display the text editor area
-        var a = document.getElementsByClassName("newword-container");
-        a[0].style.display = "block"
+        var a = document.getElementById("newword-container");
+        a.style.display = "block"
 
         // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
         setTimeout(function() {
@@ -283,9 +246,55 @@ var newWord = (function() {
       } );
     };
 
+    /**
+     * Delete the currently selected document
+     */
+    var deleteDocument = function() {
+      document.getElementById('delete-document').addEventListener('click', function() {
+        console.log('delete-document reached');
+
+        localStorage.removeItem( newWord.documentName );
+        document.getElementById( newWord.docEditorContent ).innerHTML = "No document selected";
+
+        newWord.documentDeleted = 1;
+
+        // @JC 10/08/18: remove the previous docuemtn list as now want to create a
+        // new one with the newly added doc
+        var bodyp = document.querySelector('#body');
+        var s = document.querySelector( '.doc-selector-container' );
+        bodyp.removeChild( s );
+
+        // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
+        setTimeout(function() {
+          selectDocument();
+        }, 600);
+      });
+    };
+
+
+    // old - not used
+    /**
+     * @JC 1/05/18: may not need this method keep just in case if tings start to mess up
+     * Alternatively jsut use chrome private mode which seesm to work better.
+     * its possible that extensions are cuasing the issue?
+     *
+     * To avoid any weird chrome / browser issues with not writing new content
+     * to local storage, save() clears the timer, sets editor to nothing and
+     * writes the new content to it
+     *
+     */
+    // var save = function() {
+    //   // debugger
+    //   clearInterval(newWord.timer);
+    //   // newWord.timer = 0;
+    //   localStorage.setItem( newWord.docEditorId, "");
+    //   localStorage.setItem( newWord.docEditorId, document.getElementById( newWord.docEditorId ).innerHTML);
+    // };
+
+    // # public methods # //
 
     return {
-      // # public methods # //
+
       init: function( params ) {
 
         // set defaults
@@ -308,16 +317,11 @@ var newWord = (function() {
         // saveToLocalStorage();
         newDocumentLocalStorage();
 
-        setToolbar();
-
         changeTheme( params.themeColor );
 
-        deleteDocument();
-        // addButtonSaveHandler( enableSaveBtn );
-
         /** # Async method calls **/
-
         newDocument();
+        deleteDocument();
 
         console.log("Initialised app");
       },
