@@ -163,31 +163,6 @@ var newWord = (function() {
 
     };
 
-    // var saveToLocalStorage = function() {
-    //
-    //   /**
-    //    * Word processor tutorial: BEGIN
-    //    * tutorial @ https://enlight.nyc/text-editor
-    //    */
-    //
-    //    // add new content to each dedicated editor
-    //    // -
-    //    //debugger
-    //   var content = document.getElementById( newWord.docEditorContent );
-    //   //localStorage[ newWord.docEditorId] = "";
-    //   //localStorage.removeItem( newWord.docEditorId  );
-    //   content.innerHTML = localStorage.getItem( newWord.docEditorContent ) || 'Just Write';
-    //
-    //   newWord.timer = setInterval(function() {
-    //     //debugger
-    //     // localStorage.removeItem( newWord.docEditorId  );
-    //     // localStorage[ newWord.docEditorId  ] = "";
-    //     localStorage.setItem( newWord.docEditorContent, document.getElementById( newWord.docEditorContent ).innerHTML);
-    //   }, 1000);
-    //   /* // Word processor tutorial: END */
-    // };
-
-
     /**
      *  @JC 10/08/18: this is basically the same as teh saveToLocalStorage method above,
      * i need to probalby remove the saveToLocalStorage method and do some tidy up in this method
@@ -298,21 +273,6 @@ var newWord = (function() {
           selectDocument();
         }, 600);
       });
-    };
-
-    var promptSelectDocument = function() {
-
-      // var p = document.createElement("p");
-      // var textnode = document.createTextNode("Water");
-      // p.appendChild(textnode);
-      //
-      // debugger
-      //
-      // var existingNode = document.getElementsByClassName("newword-container");
-      // existingNode[0].insertBefore(p, existingNode[0].childNodes[0]);
-
-      // var b = document.getElementById('temp-msg');
-      // b.
     };
 
     return {
