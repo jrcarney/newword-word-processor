@@ -32,8 +32,25 @@ div:focus {
 }
 
 /**
+ * Text area
+ */
+#newword-content {
+  padding: 20px;
+}
+
+#create-doc-msg {
+  background: white;
+  padding: 10px;
+}
+
+/**
  * Document select list
  */
 .doc-selector-container p {
   cursor: pointer;
+}
+
+.selected-docuement {
+  background-color: lightgrey;
+  padding: 10px;
 }

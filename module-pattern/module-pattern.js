@@ -173,6 +173,17 @@ var newWord = (function() {
           // @JC 26/8/18: remove selet or create document message
           var b = document.getElementById('create-doc-msg');
           b.style.display = 'none';
+
+          debugger
+
+          // @JC 31/8/18: Remove any previous highlighted classes
+          var docSelectorContainer = document.querySelector('.doc-selector-container');
+          for(var i=0; i<docSelectorContainer.children.length; i++) {
+          	var child = docSelectorContainer.children[ i ];
+          	child.classList = [];
+          }
+          // Add highlighted class to the currently selected item
+          ev.srcElement.className = 'selected-docuement';
         });
 
         // Append the document selector to the root element
@@ -231,7 +242,6 @@ var newWord = (function() {
      */
     var newDocument = function() {
       document.querySelector( '#new-document' ).addEventListener('click', function(ev) {
-        debugger
 
         // @JC 13/08/18: set flag so we can save documents after one has been deleted
         newWord.documentDeleted = 0;
@@ -268,8 +278,6 @@ var newWord = (function() {
     var deleteDocument = function() {
       document.getElementById('delete-document').addEventListener('click', function() {
         console.log('delete-document reached');
-
-        debugger
 
         localStorage.removeItem( newWord.documentName );
         document.getElementById( newWord.docEditorContent ).innerHTML = "No document selected";
