@@ -30,3 +30,10 @@ div:focus {
 .toolbar-buttons {
   padding: 10px;
 }
+
+/**
+ * Document select list
+ */
+.doc-selector-container p {
+  cursor: pointer;
+}

@@ -51,25 +51,43 @@ var newWord = (function() {
       * START: Create the word processor html
       */
     var generateHtml = function() {
-      //var setDocEditorId = setDocEditorId();
+      // @JC 31/8/18:
+      // create new elemtn
+      var createDocument = document.createElement('button');
+      createDocument.id = 'new-document';
+      createDocument.textContent = 'Create new document';
+      // Append the new document button to the root application element
+      newWord.rootElement.appendChild(createDocument);
+
+      // @JC 31/8/18:
+      // create delete element
+      var deleteDocument = document.createElement('button');
+      deleteDocument.id = 'delete-document';
+      deleteDocument.textContent = 'Delete document';
+      // Append the new document button to the root application element
+      newWord.rootElement.appendChild(deleteDocument);
+
+      // @JC 31/8/18:
+      // create delete element
+      var deleteDocument = document.createElement('div');
+      deleteDocument.id = 'create-doc-msg';
+      deleteDocument.textContent = 'Select or create a new document';
+      // Append the new document button to the root application element
+      newWord.rootElement.appendChild(deleteDocument);
 
       // # See readme: Document.createElement():
       // create a new div element
-      // var newDiv = document.createElement("div");
+      var newDiv = document.createElement("div");
+
+      // See https://developer.mozilla.org/en-US/docs/Web/API/Element/id for how to use the id property directly
+      newDiv.id = 'newword-container';
+      newDiv.style.display = 'none';
 
       // # See readme: Add string of HTML inside another element
-      // newDiv.classList.add("newword-container");
-      // newDiv.style.display = "none"
+      newDiv.innerHTML += `<div id="${newWord.docEditorToolbar}"></div><div id="${newWord.docEditorContent}" contenteditable="true"></div>`;
 
-      var newWordContainer = document.getElementById('newword-container');
-      newWordContainer.style.display = "none";
-
-      // # See readme: Add string of HTML inside another element
-      newWordContainer.innerHTML += `<div id="${newWord.docEditorToolbar}"></div><div id="${newWord.docEditorContent}" contenteditable="true"></div>`;
-
-      // Add the newWord html just before the closing body tag
-      // var currentDiv = document.getElementById("body");
-      // document.body.appendChild(newDiv, newWordContainer);
+      // Append the text area to the root application element
+      newWord.rootElement.appendChild(newDiv);
 
       createToolbarButtons();
     };
@@ -98,14 +116,11 @@ var newWord = (function() {
 
       // See readme: Get child elements (buttons) in the toolbar
       for(var i=0; i<toolbar.children.length; i++) {
-
         toolbar.children[i].addEventListener('click', function(ev) {
           var val = "";
-
           if( this.dataset.enableprompt === "true" ) {
             val = prompt("Value for " + this.name + "?", val);
             val = val || "";
-
           } else {
             val = this.value;
           }
@@ -125,7 +140,7 @@ var newWord = (function() {
      * everything stored in localStorage
      */
     var selectDocument = function() {
-      // get the localStorage object then calle newDocumentLocalStorage and
+      // get the localStorage object then call newDocumentLocalStorage and
       // pass the user selected document
 
       // @JC 10/08/18: create a container for the docuent lsit to reside in
@@ -144,6 +159,7 @@ var newWord = (function() {
         docSelectorContainer.appendChild( localStorageItem );
 
         localStorageItem.addEventListener('click', function(ev) {
+
           clearInterval( newWord.timer );
 
           console.log("// ev.srcElement.innerHTML is "+ev.srcElement.innerHTML);
@@ -152,15 +168,15 @@ var newWord = (function() {
 
           // @JC 26/8/18:  Display the text editor area
           var a = document.getElementById("newword-container");
-          a.style.display = "block"
+          a.style.display = "block";
 
           // @JC 26/8/18: remove selet or create document message
-          var b = document.getElementById('temp-msg');
+          var b = document.getElementById('create-doc-msg');
           b.style.display = 'none';
         });
 
-        var bodyDiv = document.getElementById("body");
-        document.body.appendChild(docSelectorContainer, bodyDiv);
+        // Append the document selector to the root element
+        newWord.rootElement.append(docSelectorContainer);
       }
     };
 
@@ -230,8 +246,8 @@ var newWord = (function() {
         newDocumentLocalStorage( newWord.documentName );
 
         // @JC 10/08/18: remove the previous docuemtn list as now want to create a
-        // new one with the newly added doc
-        var bodyp = document.querySelector('#body');
+        // new one with the newly added doc. To use our rootElement property, we must use the id DOM property
+        var bodyp = document.getElementById(newWord.rootElement.id);
         var s = document.querySelector( '.doc-selector-container' );
         bodyp.removeChild( s );
 
@@ -253,16 +269,18 @@ var newWord = (function() {
       document.getElementById('delete-document').addEventListener('click', function() {
         console.log('delete-document reached');
 
+        debugger
+
         localStorage.removeItem( newWord.documentName );
         document.getElementById( newWord.docEditorContent ).innerHTML = "No document selected";
 
         newWord.documentDeleted = 1;
 
-        // @JC 10/08/18: remove the previous docuemtn list as now want to create a
+        // @JC 10/08/18: remove the previous document list as now want to create a
         // new one with the newly added doc
-        var bodyp = document.querySelector('#body');
+        var rootEl = document.getElementById(newWord.rootElement.id);
         var s = document.querySelector( '.doc-selector-container' );
-        bodyp.removeChild( s );
+        rootEl.removeChild( s );
 
         // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
         setTimeout(function() {
@@ -291,6 +309,19 @@ var newWord = (function() {
     //   localStorage.setItem( newWord.docEditorId, document.getElementById( newWord.docEditorId ).innerHTML);
     // };
 
+
+    /**
+     * @JC 30/8/18:
+     *
+     * Get a reference to newword-wrapper.
+     * The root element must have an ID attribute for things to work.
+     */
+   var getRootElement = function() {
+     var rootEl = document.getElementById('newword-wrapper');
+     newWord.rootElement = rootEl;
+   };
+
+
     // # public methods # //
 
     return {
@@ -307,6 +338,9 @@ var newWord = (function() {
         setDocEditorId( params.editorName || "newword" );
         // newWord.docEditorId = params.editorName || "newword-editor";
 
+        // @JC 30/8/18: setup a reference to the root application element
+        getRootElement();
+
         generateHtml();
 
         // @JC 10/08/18: prpmpt user after page load to select a document from
@@ -318,6 +352,8 @@ var newWord = (function() {
         newDocumentLocalStorage();
 
         changeTheme( params.themeColor );
+
+
 
         /** # Async method calls **/
         newDocument();
