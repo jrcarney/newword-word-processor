@@ -35,7 +35,10 @@ var newWord = (function() {
       }
     ];
 
-    /** # Private methods **/
+    // Module object for containing private properties
+    var newWord = {};
+
+    /** # Private functions **/
 
      /**
      * Creates the newWord html (needed by the application) and adds it
@@ -224,12 +227,22 @@ var newWord = (function() {
     /**
      * Change the theme of the editor
      */
-    var changeTheme = function( theme ) {
-      if( theme === 'dark' ) {
+    var theme = function( params ) {
+
+      if( params && params.themeColor === 'dark' ) {
         var editor = document.getElementById( newWord.docEditorContent );
         editor.style.backgroundColor = '#383737';
         editor.style.color = '#fff';
         document.getElementById('body').style.backgroundColor = 'grey';
+      }
+
+      if( params && params.themeColor === 'camo' ) {
+        var editor = document.getElementById( newWord.docEditorContent );
+        // editor.style.backgroundColor = 'rgb(96, 117, 91)';
+        editor.style.backgroundColor = '#748475';
+        // document.getElementById('body').style.backgroundColor = '#dedede';
+        document.getElementById('body').style.backgroundColor = 'rgb(96, 117, 91)';
+        document.getElementById('body').style.color = '#dedede';
       }
     };
 
@@ -329,18 +342,18 @@ var newWord = (function() {
      newWord.rootElement = rootEl;
    };
 
+   /**
+    * This is where we create our application
+    * @param  {[type]} params [description]
+    * @return {[type]}        [description]
+    */
 
-    // # public methods # //
-
-    return {
-
-      init: function( params ) {
+    var init = function( params ) {
 
         // set defaults
         if( !params ) {
           params = {};
           params.editorName = "newword";
-          params.themeColor = "light";
         }
 
         setDocEditorId( params.editorName || "newword" );
@@ -359,30 +372,40 @@ var newWord = (function() {
         // saveToLocalStorage();
         newDocumentLocalStorage();
 
-        changeTheme( params.themeColor );
-
-
-
         /** # Async method calls **/
         newDocument();
         deleteDocument();
 
         console.log("Initialised app");
-      },
+      };
+
+      // Fire up the application
+      init();
+
+      /** ## PUBLIC API  ## **/
+      return {
+        // Allows user to change color of the application
+        changeTheme: function( params ) {
+          theme( params );
+        }
+      }
 
       //},
       // just beofre
       // exitApp: window.onbeforeunload = function(event) {
       //  save();
       // }
-    }
-
 })();
 
-// use default values
-// newWord.init();
+// public API usage
 
-// customise
-newWord.init({
+// ** note: we dont need to call init as its done privately inside the iife / module
+//newWord.changeTheme();
+
+newWord.changeTheme({
   themeColor: "dark"
 });
+
+// newWord.changeTheme({
+//   themeColor: "camo"
+// });

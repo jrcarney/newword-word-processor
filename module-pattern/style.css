@@ -3,10 +3,11 @@ html {
 }
 
 body {
-  color: #333;
+  /* color: #333; */
   font-weight: 100;
   max-width: 50em;
   margin: 0 auto;
+  background-color: #e6e4d7;
 }
 
 div:focus {
@@ -36,10 +37,11 @@ div:focus {
  */
 #newword-content {
   padding: 20px;
+  background-color: #ececec;
 }
 
 #create-doc-msg {
-  background: white;
+  background-color: white;
   padding: 10px;
 }
 
