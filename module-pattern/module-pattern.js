@@ -177,9 +177,8 @@ var newWord = (function() {
           var b = document.getElementById('create-doc-msg');
           b.style.display = 'none';
 
-          debugger
-
           // @JC 31/8/18: Remove any previous highlighted classes
+          // NOTE: this logic is pretty much doing the same as the code below
           var docSelectorContainer = document.querySelector('.doc-selector-container');
           for(var i=0; i<docSelectorContainer.children.length; i++) {
           	var child = docSelectorContainer.children[ i ];
@@ -191,6 +190,21 @@ var newWord = (function() {
 
         // Append the document selector to the root element
         newWord.rootElement.append(docSelectorContainer);
+      }
+
+      // @JC 12/9/18: Highlight the newly created document
+      // NOTE: this logic is pretty much doing the same as the code in selectd
+      // click handler so refactor to one functon
+      if( newWord.newlyCreatedDoc  ) {
+
+        var docSelectorContainer = document.querySelector('.doc-selector-container');
+        for(var i=0; i<docSelectorContainer.children.length; i++) {
+          var child = docSelectorContainer.children[ i ];
+
+          if( newWord.documentName === child.innerHTML ) {
+            child.setAttribute('class', 'selected-docuement');
+          }
+        }
       }
     };
 
@@ -219,8 +233,11 @@ var newWord = (function() {
 
         if( newWord.documentDeleted !== 1 ) {
           localStorage.setItem( newWord.documentName, document.getElementById( newWord.docEditorContent ).innerHTML);
+
+          // @JC 12/9/18
+          newWord.newlyCreatedDoc = 1;
         }
-      }, 500);
+      }, 5);
       /* // Word processor tutorial: END */
     };
 
@@ -276,12 +293,15 @@ var newWord = (function() {
 
         // Display the text editor area
         var a = document.getElementById("newword-container");
-        a.style.display = "block"
+        a.style.display = "block";
+
+        // Add highlighted class to the currently selected item
+        //ev.srcElement.className = 'selected-docuement';
 
         // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
         setTimeout(function() {
           selectDocument();
-        }, 600);
+        }, 100);
       } );
     };
 
@@ -306,7 +326,7 @@ var newWord = (function() {
         // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
         setTimeout(function() {
           selectDocument();
-        }, 600);
+        }, 10);
       });
     };
 
