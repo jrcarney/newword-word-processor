@@ -32,6 +32,13 @@ var newWord = (function() {
         "title": "",
         "value": "",
         "enableprompt": ""
+      },
+      {
+        "name": "remove-format",
+        "cmd": "removeFormat",
+        "title": "",
+        "value": "",
+        "enableprompt": ""
       }
     ];
 
@@ -329,7 +336,6 @@ var newWord = (function() {
         }, 10);
       });
     };
-
 
     // old - not used
     /**
