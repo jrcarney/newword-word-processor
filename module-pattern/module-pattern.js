@@ -39,6 +39,13 @@ var newWord = (function() {
         "title": "",
         "value": "",
         "enableprompt": ""
+      },
+      {
+        "name": "change-color",
+        "cmd": "foreColor",
+        "title": "",
+        "value": "rgba(0,0,0,.5)",
+        "enableprompt": "true"
       }
     ];
 
