@@ -51,6 +51,8 @@ var newWord = (function() {
 
     // Module object for containing private properties
     var newWord = {};
+    newWord.documentList = [];
+    newWord.sortOrder = 1;
 
     /** # Private functions **/
 
@@ -91,6 +93,13 @@ var newWord = (function() {
       deleteDocument.textContent = 'Select or create a new document';
       // Append the new document button to the root application element
       newWord.rootElement.appendChild(deleteDocument);
+
+      // @JC 17/9/18:
+      var sortButton = document.createElement('button');
+      sortButton.id = 'cheap';
+      sortButton.textContent = 'Sort';
+      // Append the new document button to the root application element
+      newWord.rootElement.appendChild(sortButton);
 
       // # See readme: Document.createElement():
       // create a new div element
@@ -150,6 +159,91 @@ var newWord = (function() {
      * END: Create the word processor html
      */
 
+     // @JC 16/9/18: attempt to sort document list
+     var getLocalStorageItems = function( reverse ) {
+       newWord.documentList = [];
+
+       // @JC 10/08/18: loop through localStorage, add a click handler to each item,
+       // then dsiaply the documents contents in the editor
+       for(var i=0; i<localStorage.length; i++) {
+         console.log("prnt localStorage items and add click handler");
+         newWord.documentList.push( Object.keys(localStorage)[i] );
+       }
+
+      //  if( newWord.sortOrder === 0 ) {
+      //    newWord.documentList = newWord.documentList.reverse();
+      //    newWord.sortOrder = 1;
+      //    console.log(newWord.documentList);
+      //    // debugger
+      //
+      // } else {
+      //   // debugger
+      //   newWord.documentList.sort();
+      //   newWord.sortOrder = 0;
+      // }
+
+      // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
+      // setTimeout(function() {
+      //   selectDocument();
+      // }, 10);
+     };
+
+     // @JC 17/9/18: Sort the documents in ascending or descending order
+     var sortTheDocuments = function() {
+       // reverse the list
+       if( newWord.sortOrder === 0 ) {
+         // old way of reversing: note - it dosnt account for uppercase words which isnt good
+         // newWord.documentList = newWord.documentList.reverse();
+         //
+         newWord.documentList.sort(function(a, b) {
+           debugger
+          var a = a.toLowerCase();
+           var b = b.toLowerCase();
+
+           var comparison = 0;
+           if (a < b) {
+             comparison = -1;
+             // return -1;
+           }
+           if (a > b) {
+             comparison = 1;
+             // return 1;
+           }
+
+           // names must be equal
+           return comparison * -1;
+         } );
+         newWord.sortOrder = 1;
+         console.log(newWord.documentList);
+         // debugger
+
+      } else {
+        // old way of reversing: note - it dosnt account for uppercase words which isnt good
+        // newWord.documentList.sort();
+
+        // sort list alphabeticaly
+        newWord.documentList.sort(function(a, b) {
+          debugger
+         var a = a.toLowerCase();
+          var b = b.toLowerCase();
+
+          var comparison = 0;
+          if (a < b) {
+            comparison =  -1;
+          }
+          if (a > b) {
+            comparison = 1;
+          }
+
+          // names must be equal
+          return comparison;
+        } );
+
+        newWord.sortOrder = 0;
+        console.log(newWord.documentList);
+      }
+     };
+
     /**
      * @JC 10/08/18:
      *
@@ -160,19 +254,27 @@ var newWord = (function() {
       // get the localStorage object then call newDocumentLocalStorage and
       // pass the user selected document
 
+      // @JC 16/9/18: rmeove the previous docuemt container
+
+      var bodyp = document.getElementById(newWord.rootElement.id);
+      var s = document.querySelector( '.doc-selector-container' );
+      if (s) {
+        bodyp.removeChild( s );
+      }
+
       // @JC 10/08/18: create a container for the docuent lsit to reside in
       var docSelectorContainer = document.createElement("div");
       docSelectorContainer.setAttribute('class','doc-selector-container');
 
       // @JC 10/08/18: loop through localStorage, add a click handler to each item,
       // then dsiaply the documents contents in the editor
-      for(var i=0; i<localStorage.length; i++) {
+      for(var i=0; i<newWord.documentList.length; i++) {
       	console.log("prnt localStorage items and add click handler");
 
-        var loopedItem = Object.keys(localStorage)[i];
+        //var loopedItem = Object.keys(localStorage)[i];
         var localStorageItem = document.createElement("p");
 
-        localStorageItem.innerHTML += loopedItem;
+        localStorageItem.innerHTML += newWord.documentList[ i ];
         docSelectorContainer.appendChild( localStorageItem );
 
         localStorageItem.addEventListener('click', function(ev) {
@@ -229,6 +331,7 @@ var newWord = (function() {
      * - If no document has been selected, then dont display any document
      */
     var newDocumentLocalStorage = function( docName ) {
+      // debugger
       /**
        * Word processor tutorial: BEGIN
        * tutorial @ https://enlight.nyc/text-editor
@@ -259,7 +362,9 @@ var newWord = (function() {
      * Change the theme of the editor
      */
     var theme = function( params ) {
-
+      if( params && params.themeColor === '' ) {
+        return;
+      }
       if( params && params.themeColor === 'dark' ) {
         var editor = document.getElementById( newWord.docEditorContent );
         editor.style.backgroundColor = '#383737';
@@ -286,7 +391,7 @@ var newWord = (function() {
      */
     var newDocument = function() {
       document.querySelector( '#new-document' ).addEventListener('click', function(ev) {
-
+        //debugger
         // @JC 13/08/18: set flag so we can save documents after one has been deleted
         newWord.documentDeleted = 0;
 
@@ -298,12 +403,12 @@ var newWord = (function() {
 
         // @JC 10/08/18: addthe new docuemtn to localStorageItem
         newDocumentLocalStorage( newWord.documentName );
-
+//debugger
         // @JC 10/08/18: remove the previous docuemtn list as now want to create a
         // new one with the newly added doc. To use our rootElement property, we must use the id DOM property
-        var bodyp = document.getElementById(newWord.rootElement.id);
-        var s = document.querySelector( '.doc-selector-container' );
-        bodyp.removeChild( s );
+        // var bodyp = document.getElementById(newWord.rootElement.id);
+        // var s = document.querySelector( '.doc-selector-container' );
+        // bodyp.removeChild( s );
 
         // Display the text editor area
         var a = document.getElementById("newword-container");
@@ -314,7 +419,13 @@ var newWord = (function() {
 
         // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
         setTimeout(function() {
+          // debugger
+
+          getLocalStorageItems();
+          newWord.sortOrder = 1; // Sort alphabeticaly when we create an item
+          sortTheDocuments();
           selectDocument();
+
         }, 100);
       } );
     };
@@ -337,11 +448,29 @@ var newWord = (function() {
         var s = document.querySelector( '.doc-selector-container' );
         rootEl.removeChild( s );
 
+        getLocalStorageItems();
+
         // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
         setTimeout(function() {
+          // selectDocument();
+
+          getLocalStorageItems();
+          newWord.sortOrder = 1; // Sort alphabeticaly when we delete an item
+          sortTheDocuments();
           selectDocument();
+
+
         }, 10);
       });
+    };
+
+    var sortDocList = function() {
+        document.getElementById('cheap').addEventListener('click', function(ev) {
+          //newWord.sortOrder = 0;
+          getLocalStorageItems( newWord.sortOrder );
+          sortTheDocuments();
+          selectDocument();
+        });
     };
 
     // old - not used
@@ -399,6 +528,9 @@ var newWord = (function() {
 
         // @JC 10/08/18: prpmpt user after page load to select a document from
         // localStorage
+        // selectDocument();
+        getLocalStorageItems();
+        sortTheDocuments();
         selectDocument();
 
         // @JC 10/08/18: commened out so to try and use a refactored localStorage
@@ -408,6 +540,7 @@ var newWord = (function() {
         /** # Async method calls **/
         newDocument();
         deleteDocument();
+        sortDocList();
 
         console.log("Initialised app");
       };
@@ -435,10 +568,12 @@ var newWord = (function() {
 // ** note: we dont need to call init as its done privately inside the iife / module
 //newWord.changeTheme();
 
+/**
+ * THeme options
+ * - vanilla ( default - no param value for themeColor)
+ * - dark
+ * - camo
+ */
 newWord.changeTheme({
-  themeColor: "dark"
+  themeColor: "camo"
 });
-
-// newWord.changeTheme({
-//   themeColor: "camo"
-// });
