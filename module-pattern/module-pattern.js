@@ -196,7 +196,7 @@ var newWord = (function() {
          // newWord.documentList = newWord.documentList.reverse();
          //
          newWord.documentList.sort(function(a, b) {
-           debugger
+           //debugger
           var a = a.toLowerCase();
            var b = b.toLowerCase();
 
@@ -223,7 +223,7 @@ var newWord = (function() {
 
         // sort list alphabeticaly
         newWord.documentList.sort(function(a, b) {
-          debugger
+          //debugger
          var a = a.toLowerCase();
           var b = b.toLowerCase();
 
@@ -379,6 +379,26 @@ var newWord = (function() {
         // document.getElementById('body').style.backgroundColor = '#dedede';
         document.getElementById('body').style.backgroundColor = 'rgb(96, 117, 91)';
         document.getElementById('body').style.color = '#dedede';
+      }
+
+      if( params && params.themeColor === 'homebrew' ) {
+        // content editor
+        var editor = document.getElementById( newWord.docEditorContent );
+        editor.style.backgroundColor = 'black';
+        editor.style.color = '#01ff01';
+        editor.style.fontFamily = 'monospace';
+        editor.style.fontSize = '18px';
+
+        // document.getElementById('body').style.backgroundColor = '#dedede';
+        document.getElementById('body').style.backgroundColor = '#272727';
+        document.getElementById('body').style.color = '#dedede';
+
+        // document list
+        var themeDocList = document.getElementsByClassName('doc-selector-container')[0].children
+        for(var i=0; i<themeDocList.length; i++) {
+        	// console.log(a[ i ]);
+        	themeDocList[ i ].style.color = '#9f9fff';
+        }
       }
     };
 
@@ -575,5 +595,5 @@ var newWord = (function() {
  * - camo
  */
 newWord.changeTheme({
-  themeColor: "camo"
+  themeColor: "homebrew"
 });
