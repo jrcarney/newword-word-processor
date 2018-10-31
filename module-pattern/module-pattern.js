@@ -336,11 +336,11 @@ var newWord = (function() {
        * Word processor tutorial: BEGIN
        * tutorial @ https://enlight.nyc/text-editor
        */
-       // add new content to each dedicated editor
-       // -
+
        if( !docName ) {
          var docName = newWord.docEditorContent;
        }
+       debugger
       var content = document.getElementById( newWord.docEditorContent );
       content.innerHTML = localStorage.getItem( docName ) || 'Just Write';
       newWord.newDocumentTimer = setInterval(function() {
@@ -356,6 +356,57 @@ var newWord = (function() {
         }
       }, 5);
       /* // Word processor tutorial: END */
+
+      // 31/10/18
+      // resources:
+      // - https://developer.mozilla.org/en-US/docs/Glossary/Serialization
+      // - https://coderwall.com/p/ewxn9g/storing-and-retrieving-objects-with-localstorage-html5
+      // - https://zellwk.com/blog/looping-through-js-objects/
+      // -
+
+      // // GET localStorage items
+      // -------------------------
+      //
+      // ) check if there is an object in localStorage
+      // var documentStore = localStorage.getItem( documentStore ) || [];
+      //
+      // ) parse the documentStore
+      // var parsedDocStore = JSON.parse( documentStore );
+      //
+      // ) is docName in the documentStore?
+
+      // // SAVE localStorage items
+      // -------------------------
+      // ) create an object
+      // var singleDoc = {
+      //  "documentName": newWord.documentName
+      // }
+      //
+      // documentStore.push( singleDoc );
+      //
+      // ) push new documents onto the array
+      // localStorage.setItem( "documentStore", JSON.stringify( documentStore ) );
+      //
+      //
+      //
+      // 1) create an array objects. i plan to store each document in its own object.
+      // var documentStore = [
+      //     {
+      // 		"documentName": "im doc one!",
+      // 		"dateCreated": "31/10/18"
+      // 	},
+      //     {
+      // 		"documentName": "document number two",
+      // 		"dateCreated": "12/09/18"
+      // 	}
+      // ]
+      //
+      // 2) serialise the array so it can be stored into localStorage
+      // var stringifiedArray = JSON.stringify(documentStore);
+      //
+      // 3) store the object in localStorage
+      // var serialisedNewWord = localStorage.setItem('serialisedNewWord', stringifiedArray)
+
     };
 
     /**
@@ -554,7 +605,7 @@ var newWord = (function() {
         selectDocument();
 
         // @JC 10/08/18: commened out so to try and use a refactored localStorage
-        // saveToLocalStorage();
+        // saveToLocalStorage(); -- // old version
         newDocumentLocalStorage();
 
         /** # Async method calls **/
