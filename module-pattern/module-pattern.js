@@ -357,8 +357,7 @@ var newWord = (function() {
       }, 5);
       /* // Word processor tutorial: END */
 
-      // 31/10/18
-      // resources:
+      // 31/10/18: resources
       // - https://developer.mozilla.org/en-US/docs/Glossary/Serialization
       // - https://coderwall.com/p/ewxn9g/storing-and-retrieving-objects-with-localstorage-html5
       // - https://zellwk.com/blog/looping-through-js-objects/
