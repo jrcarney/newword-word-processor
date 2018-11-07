@@ -250,7 +250,7 @@ var newWord = (function() {
      * Display a list of the currently save documents, ie,
      * everything stored in localStorage
      */
-    var selectDocument = function() {
+    var selectDocument = function() {    
       // get the localStorage object then call newDocumentLocalStorage and
       // pass the user selected document
 
@@ -324,37 +324,41 @@ var newWord = (function() {
       }
     };
 
+    // @JC 5/11/18: commented out so to try the new serialised storage
     /**
      *  @JC 10/08/18:
      *
      * - Once a document has been selected, regularly save it to local storage
      * - If no document has been selected, then dont display any document
      */
-    var newDocumentLocalStorage = function( docName ) {
-      // debugger
-      /**
-       * Word processor tutorial: BEGIN
-       * tutorial @ https://enlight.nyc/text-editor
-       */
+    // var newDocumentLocalStorage = function( docName ) {
+    //   // debugger
+    //   /**
+    //    * Word processor tutorial: BEGIN
+    //    * tutorial @ https://enlight.nyc/text-editor
+    //    */
 
-       if( !docName ) {
-         var docName = newWord.docEditorContent;
-       }
-       debugger
-      var content = document.getElementById( newWord.docEditorContent );
-      content.innerHTML = localStorage.getItem( docName ) || 'Just Write';
-      newWord.newDocumentTimer = setInterval(function() {
-        if( !newWord.documentName ) {
-          return;
-        }
+    //    if( !docName ) {
+    //      var docName = newWord.docEditorContent;
+    //    }
+    //    debugger
+    //   var content = document.getElementById( newWord.docEditorContent );
+    //   content.innerHTML = localStorage.getItem( docName ) || 'Just Write';
+    //   newWord.newDocumentTimer = setInterval(function() {
+    //     if( !newWord.documentName ) {
+    //       return;
+    //     }
 
-        if( newWord.documentDeleted !== 1 ) {
-          localStorage.setItem( newWord.documentName, document.getElementById( newWord.docEditorContent ).innerHTML);
+    //     if( newWord.documentDeleted !== 1 ) {
+    //       localStorage.setItem( newWord.documentName, document.getElementById( newWord.docEditorContent ).innerHTML);
 
-          // @JC 12/9/18
-          newWord.newlyCreatedDoc = 1;
-        }
-      }, 5);
+    //       // @JC 5/11/18
+
+    //       // @JC 12/9/18
+    //       newWord.newlyCreatedDoc = 1;
+    //     }
+    //   }, 5);
+    // };
       /* // Word processor tutorial: END */
 
       // 31/10/18: resources
@@ -390,14 +394,8 @@ var newWord = (function() {
       //
       // 1) create an array objects. i plan to store each document in its own object.
       // var documentStore = [
-      //     {
-      // 		"documentName": "im doc one!",
-      // 		"dateCreated": "31/10/18"
-      // 	},
-      //     {
-      // 		"documentName": "document number two",
-      // 		"dateCreated": "12/09/18"
-      // 	}
+      //  { documentName: "a", documentContent: "Soooo document A : D", dateCreated: "31/10/18"},
+      //  { documentName: "blah", documentContent: "Thats the bottom line", dateCreated: "12/09/18"}    
       // ]
       //
       // 2) serialise the array so it can be stored into localStorage
@@ -406,7 +404,61 @@ var newWord = (function() {
       // 3) store the object in localStorage
       // var serialisedNewWord = localStorage.setItem('serialisedNewWord', stringifiedArray)
 
-    };
+  /* ################################################################ */
+  // @JC 5/11/18: an attemtp at the new serialised storage
+  // this is quite an undertaking so will need to be careful. i should create a new branch for this 
+  // as its rather dangerous.
+  /* ################################################################ */
+      
+      var newDocumentLocalStorage = function( docName ) {        
+        // get the serialised docs object
+        newWord.unParseddocumentStore = localStorage.getItem( 'documentStore' ) || [];
+        
+        // parse the object so we can operate on it
+        newWord.parsedDocStore = JSON.parse( newWord.unParseddocumentStore );
+
+        // If we DIDNT pass in the name of the document, set it to the default
+        if( !docName ) {
+          var docName = newWord.docEditorContent;
+        }
+         
+        // Get the text area element
+        var content = document.getElementById( newWord.docEditorContent );
+
+        // Loop through the parsed document store. If the current iterated document name matches the one we
+        // selected, set the document content to the text area
+        for(var i=0; i < newWord.parsedDocStore.length; i++) {
+          var doc = newWord.parsedDocStore[i];
+
+          if( docName === doc.documentName ) {
+            // Set the document content to the text area
+            content.innerHTML = doc.documentContent || 'Just Write';
+          }          
+        }
+             
+        // every N seconds, update the docuent store with the latest text area content
+        newWord.newDocumentTimer = setInterval(function() {
+          if( !newWord.documentName ) {
+            return;
+          }
+  
+          // @JC 7/11/18: if the document we selected matches a document in the store, 
+          // update that document, then update the document store
+          if( newWord.documentDeleted !== 1 ) {           
+            for(var i=0; i < newWord.parsedDocStore.length; i++) {
+              var doc = newWord.parsedDocStore[i];
+                    
+               if( newWord.documentName === doc.documentName ) {                               
+                  newWord.parsedDocStore[i].documentContent = document.getElementById( newWord.docEditorContent ).innerHTML;
+                  newWord.unParseddocumentStore = JSON.stringify(newWord.parsedDocStore);                
+                  localStorage.setItem('documentStore', newWord.unParseddocumentStore);
+               }
+            }            
+            // @JC 12/9/18
+            newWord.newlyCreatedDoc = 1;
+          }
+        }, 1000);
+      };
 
     /**
      * Change the theme of the editor
@@ -461,7 +513,7 @@ var newWord = (function() {
      */
     var newDocument = function() {
       document.querySelector( '#new-document' ).addEventListener('click', function(ev) {
-        //debugger
+        
         // @JC 13/08/18: set flag so we can save documents after one has been deleted
         newWord.documentDeleted = 0;
 
@@ -488,8 +540,7 @@ var newWord = (function() {
         //ev.srcElement.className = 'selected-docuement';
 
         // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
-        setTimeout(function() {
-          // debugger
+        setTimeout(function() {          
 
           getLocalStorageItems();
           newWord.sortOrder = 1; // Sort alphabeticaly when we create an item
