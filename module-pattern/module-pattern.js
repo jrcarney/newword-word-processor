@@ -393,10 +393,15 @@ var newWord = (function() {
       //
       //
       // 1) create an array objects. i plan to store each document in its own object.
-      // var documentStore = [
-      //  { documentName: "a", documentContent: "Soooo document A : D", dateCreated: "31/10/18"},
-      //  { documentName: "blah", documentContent: "Thats the bottom line", dateCreated: "12/09/18"}    
-      // ]
+      /* 
+      
+      // use this object as a foundation for populating the serialsed object ( for when things
+      // go wroing with the object! )
+      var documentStore = [
+        { "documentName": "a", "documentContent": "Soooo document A : D", "dateCreated": "31/10/18"},
+        { "documentName": "blah", "documentContent": "Thats the bottom line", "dateCreated": "12/09/18"}    
+      ]
+       */
       //
       // 2) serialise the array so it can be stored into localStorage
       // var stringifiedArray = JSON.stringify(documentStore);
@@ -411,6 +416,7 @@ var newWord = (function() {
   /* ################################################################ */
       
       var newDocumentLocalStorage = function( docName ) {        
+        
         // get the serialised docs object
         newWord.unParseddocumentStore = localStorage.getItem( 'documentStore' ) || [];
         
@@ -444,7 +450,8 @@ var newWord = (function() {
   
           // @JC 7/11/18: if the document we selected matches a document in the store, 
           // update that document, then update the document store
-          if( newWord.documentDeleted !== 1 ) {           
+          if( newWord.documentDeleted !== 1 ) {        
+            
             for(var i=0; i < newWord.parsedDocStore.length; i++) {
               var doc = newWord.parsedDocStore[i];
                     
@@ -452,7 +459,7 @@ var newWord = (function() {
                   newWord.parsedDocStore[i].documentContent = document.getElementById( newWord.docEditorContent ).innerHTML;
                   newWord.unParseddocumentStore = JSON.stringify(newWord.parsedDocStore);                
                   localStorage.setItem('documentStore', newWord.unParseddocumentStore);
-               }
+               } 
             }            
             // @JC 12/9/18
             newWord.newlyCreatedDoc = 1;
@@ -517,7 +524,7 @@ var newWord = (function() {
         // @JC 13/08/18: set flag so we can save documents after one has been deleted
         newWord.documentDeleted = 0;
 
-        console.log("clled newDocument");
+        // console.log("clled newDocument");
         newWord.documentName = prompt("Name of document","");
 
         // @JC 10/08/18: clear the timer so we are not createing multuple timers
@@ -525,6 +532,31 @@ var newWord = (function() {
 
         // @JC 10/08/18: addthe new docuemtn to localStorageItem
         newDocumentLocalStorage( newWord.documentName );
+
+        // @JC 11/11/18: add a new document to the docuemnt store
+        var documentStore = localStorage.getItem('documentStore');    
+        var unParseddocumentStore = JSON.parse( documentStore );    
+
+        // if( !newWord.pushedNewDoc ) {
+        //   // @JC 11/11/18 crate date object so we can leverage date methods
+        var todaysDate = new Date();
+        unParseddocumentStore.push( {
+          'documentName'  : newWord.documentName,
+          'dateCreated' : todaysDate.toLocaleDateString(),
+          'documentContent': document.getElementById( newWord.docEditorContent ).innerHTML
+        } );
+
+        var parsedDocumentStore = JSON.stringify(unParseddocumentStore);   
+        localStorage.setItem('documentStore', parsedDocumentStore);
+
+        //   // @JC 11/11/18: add a property to the newword object to signify a 
+        //   // new document has been pushed onto the document store
+        //   newWord.pushedNewDoc = 1;
+
+        //   newWord.unParseddocumentStore = JSON.stringify(newWord.parsedDocStore);   
+        //   localStorage.setItem('documentStore', newWord.unParseddocumentStore);
+        // }        
+
 //debugger
         // @JC 10/08/18: remove the previous docuemtn list as now want to create a
         // new one with the newly added doc. To use our rootElement property, we must use the id DOM property
