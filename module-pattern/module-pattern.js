@@ -174,10 +174,10 @@ var newWord = (function() {
       //    newWord.documentList = newWord.documentList.reverse();
       //    newWord.sortOrder = 1;
       //    console.log(newWord.documentList);
-      //    // debugger
+      //    
       //
       // } else {
-      //   // debugger
+      //   
       //   newWord.documentList.sort();
       //   newWord.sortOrder = 0;
       // }
@@ -195,8 +195,7 @@ var newWord = (function() {
          // old way of reversing: note - it dosnt account for uppercase words which isnt good
          // newWord.documentList = newWord.documentList.reverse();
          //
-         newWord.documentList.sort(function(a, b) {
-           //debugger
+         newWord.documentList.sort(function(a, b) {           
           var a = a.toLowerCase();
            var b = b.toLowerCase();
 
@@ -214,16 +213,14 @@ var newWord = (function() {
            return comparison * -1;
          } );
          newWord.sortOrder = 1;
-         console.log(newWord.documentList);
-         // debugger
+         console.log(newWord.documentList);         
 
       } else {
         // old way of reversing: note - it dosnt account for uppercase words which isnt good
         // newWord.documentList.sort();
 
         // sort list alphabeticaly
-        newWord.documentList.sort(function(a, b) {
-          //debugger
+        newWord.documentList.sort(function(a, b) {          
          var a = a.toLowerCase();
           var b = b.toLowerCase();
 
@@ -244,17 +241,10 @@ var newWord = (function() {
       }
      };
 
-    /**
-     * @JC 10/08/18:
-     *
-     * Display a list of the currently save documents, ie,
-     * everything stored in localStorage
-     */
-    var selectDocument = function() {    
+    // @JC 21/11/18: old implementation. now switched over to getSerialisedDocuments()
+    var selectDocument = function() {          
       // get the localStorage object then call newDocumentLocalStorage and
       // pass the user selected document
-
-      // @JC 16/9/18: rmeove the previous docuemt container
 
       var bodyp = document.getElementById(newWord.rootElement.id);
       var s = document.querySelector( '.doc-selector-container' );
@@ -324,6 +314,86 @@ var newWord = (function() {
       }
     };
 
+    /**
+     * @JC 21/11/18: get the serialised doucments
+     *
+     * Display a list of the currently save documents, ie,
+     * everything stored in localStorage
+     */    
+    var getSerialisedDocuments = function() {
+      debugger
+
+      var bodyp = document.getElementById(newWord.rootElement.id);
+      var s = document.querySelector( '.doc-selector-container' );
+      if (s) {
+        bodyp.removeChild( s );
+      }
+
+      // @JC 10/08/18: create a container for the docuent lsit to reside in
+      var docSelectorContainer = document.createElement("div");
+      docSelectorContainer.setAttribute('class','doc-selector-container');
+      
+      var documentStore = localStorage.getItem('documentStore');    
+      var unParseddocumentStore = JSON.parse( documentStore ); 
+
+      for(var i=0; i<unParseddocumentStore.length; i++) {
+	
+        var singleDocument = unParseddocumentStore[ i ];
+        console.log( singleDocument  );
+      
+          
+          var localStorageItem = document.createElement("p");
+          localStorageItem.innerHTML += singleDocument.documentName;
+          docSelectorContainer.appendChild( localStorageItem );
+
+          localStorageItem.addEventListener('click', function(ev) {
+debugger
+            clearInterval( newWord.timer );
+  
+            console.log("// ev.srcElement.innerHTML is "+ev.srcElement.innerHTML);
+            newWord.documentName = ev.srcElement.innerHTML;
+            newDocumentLocalStorage( newWord.documentName );
+  
+            // @JC 26/8/18:  Display the text editor area
+            var a = document.getElementById("newword-container");
+            a.style.display = "block";
+  
+            // @JC 26/8/18: remove selet or create document message
+            var b = document.getElementById('create-doc-msg');
+            b.style.display = 'none';
+  
+            // @JC 31/8/18: Remove any previous highlighted classes
+            // NOTE: this logic is pretty much doing the same as the code below
+            var docSelectorContainer = document.querySelector('.doc-selector-container');
+            for(var i=0; i<docSelectorContainer.children.length; i++) {
+              var child = docSelectorContainer.children[ i ];
+              child.classList = [];
+            }
+            // Add highlighted class to the currently selected item
+            ev.srcElement.className = 'selected-docuement';
+          }); 
+
+          // Append the document selector to the root element
+          newWord.rootElement.append(docSelectorContainer);    
+      }
+
+      // @JC 12/9/18: Highlight the newly created document
+      // NOTE: this logic is pretty much doing the same as the code in selectd
+      // click handler so refactor to one functon
+      if( newWord.newlyCreatedDoc  ) {
+
+        var docSelectorContainer = document.querySelector('.doc-selector-container');
+        for(var i=0; i<docSelectorContainer.children.length; i++) {
+          var child = docSelectorContainer.children[ i ];
+
+          if( newWord.documentName === child.innerHTML ) {
+            child.setAttribute('class', 'selected-docuement');
+          }
+        }
+      }
+
+    }; // end function
+
     // @JC 5/11/18: commented out so to try the new serialised storage
     /**
      *  @JC 10/08/18:
@@ -332,7 +402,7 @@ var newWord = (function() {
      * - If no document has been selected, then dont display any document
      */
     // var newDocumentLocalStorage = function( docName ) {
-    //   // debugger
+    //   
     //   /**
     //    * Word processor tutorial: BEGIN
     //    * tutorial @ https://enlight.nyc/text-editor
@@ -341,7 +411,7 @@ var newWord = (function() {
     //    if( !docName ) {
     //      var docName = newWord.docEditorContent;
     //    }
-    //    debugger
+    //    
     //   var content = document.getElementById( newWord.docEditorContent );
     //   content.innerHTML = localStorage.getItem( docName ) || 'Just Write';
     //   newWord.newDocumentTimer = setInterval(function() {
@@ -519,6 +589,7 @@ var newWord = (function() {
      * Creates a new document when the user clicks the 'new document' button
      */
     var newDocument = function() {
+      debugger
       document.querySelector( '#new-document' ).addEventListener('click', function(ev) {
         
         // @JC 13/08/18: set flag so we can save documents after one has been deleted
@@ -533,21 +604,7 @@ var newWord = (function() {
         // @JC 10/08/18: addthe new docuemtn to localStorageItem
         newDocumentLocalStorage( newWord.documentName );
 
-        // @JC 11/11/18: add a new document to the docuemnt store
-        var documentStore = localStorage.getItem('documentStore');    
-        var unParseddocumentStore = JSON.parse( documentStore );    
-
-        // if( !newWord.pushedNewDoc ) {
-        //   // @JC 11/11/18 crate date object so we can leverage date methods
-        var todaysDate = new Date();
-        unParseddocumentStore.push( {
-          'documentName'  : newWord.documentName,
-          'dateCreated' : todaysDate.toLocaleDateString(),
-          'documentContent': document.getElementById( newWord.docEditorContent ).innerHTML
-        } );
-
-        var parsedDocumentStore = JSON.stringify(unParseddocumentStore);   
-        localStorage.setItem('documentStore', parsedDocumentStore);
+        setSerialisedDocuments();
 
         //   // @JC 11/11/18: add a property to the newword object to signify a 
         //   // new document has been pushed onto the document store
@@ -557,7 +614,6 @@ var newWord = (function() {
         //   localStorage.setItem('documentStore', newWord.unParseddocumentStore);
         // }        
 
-//debugger
         // @JC 10/08/18: remove the previous docuemtn list as now want to create a
         // new one with the newly added doc. To use our rootElement property, we must use the id DOM property
         // var bodyp = document.getElementById(newWord.rootElement.id);
@@ -574,13 +630,37 @@ var newWord = (function() {
         // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
         setTimeout(function() {          
 
+          
           getLocalStorageItems();
           newWord.sortOrder = 1; // Sort alphabeticaly when we create an item
           sortTheDocuments();
-          selectDocument();
+
+          // @JC 21/11/18: commented out so to use to serialised object
+          // selectDocument();
+          getSerialisedDocuments();
 
         }, 100);
       } );
+    };
+
+
+    // @JC 11/11/18: add a new document to the serialised docuemnt store
+    var setSerialisedDocuments = function() {  
+      debugger      
+      var documentStore = localStorage.getItem('documentStore');    
+      var unParseddocumentStore = JSON.parse( documentStore );    
+
+      // if( !newWord.pushedNewDoc ) {
+      //   // @JC 11/11/18 crate date object so we can leverage date methods
+      var todaysDate = new Date();
+      unParseddocumentStore.push( {
+        'documentName'  : newWord.documentName,
+        'dateCreated' : todaysDate.toLocaleDateString(),
+        'documentContent': document.getElementById( newWord.docEditorContent ).innerHTML
+      } );
+
+      var parsedDocumentStore = JSON.stringify(unParseddocumentStore);   
+      localStorage.setItem('documentStore', parsedDocumentStore);
     };
 
     /**
@@ -610,7 +690,10 @@ var newWord = (function() {
           getLocalStorageItems();
           newWord.sortOrder = 1; // Sort alphabeticaly when we delete an item
           sortTheDocuments();
-          selectDocument();
+
+          // @JC 21/11/18: commented out so to use the new 'get serialised object' funciton
+          // selectDocument();
+          getSerialisedDocuments();
 
 
         }, 10);
@@ -622,7 +705,10 @@ var newWord = (function() {
           //newWord.sortOrder = 0;
           getLocalStorageItems( newWord.sortOrder );
           sortTheDocuments();
-          selectDocument();
+          
+          // @JC 21/11/18: commented out so to use the new 'get serialised object' funciton
+          // selectDocument();
+          getSerialisedDocuments();
         });
     };
 
@@ -684,7 +770,11 @@ var newWord = (function() {
         // selectDocument();
         getLocalStorageItems();
         sortTheDocuments();
-        selectDocument();
+        
+        // @JC 21/11/18: commented out the previous implementation, so to use getSerialisedDocuments()
+        // selectDocument();
+        // @JC 21/11/18: get the serialised docs
+        getSerialisedDocuments();
 
         // @JC 10/08/18: commened out so to try and use a refactored localStorage
         // saveToLocalStorage(); -- // old version
