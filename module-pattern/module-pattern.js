@@ -1,7 +1,5 @@
 var newWord = (function() {
 
-//debugger
-
     /** # Priavate properties **/
     var commands = [
       {
@@ -320,9 +318,7 @@ var newWord = (function() {
      * Display a list of the currently save documents, ie,
      * everything stored in localStorage
      */    
-    var getSerialisedDocuments = function() {
-      debugger
-
+    var getSerialisedDocuments = function() {     
       var bodyp = document.getElementById(newWord.rootElement.id);
       var s = document.querySelector( '.doc-selector-container' );
       if (s) {
@@ -347,7 +343,6 @@ var newWord = (function() {
           docSelectorContainer.appendChild( localStorageItem );
 
           localStorageItem.addEventListener('click', function(ev) {
-debugger
             clearInterval( newWord.timer );
   
             console.log("// ev.srcElement.innerHTML is "+ev.srcElement.innerHTML);
@@ -485,7 +480,8 @@ debugger
   // as its rather dangerous.
   /* ################################################################ */
       
-      var newDocumentLocalStorage = function( docName ) {        
+      // @JC 2/12/18: added 2nd arg that specifies if we have created a new document
+      var newDocumentLocalStorage = function( docName, isNewDoc ) {        
         
         // get the serialised docs object
         newWord.unParseddocumentStore = localStorage.getItem( 'documentStore' ) || [];
@@ -500,7 +496,7 @@ debugger
          
         // Get the text area element
         var content = document.getElementById( newWord.docEditorContent );
-
+        
         // Loop through the parsed document store. If the current iterated document name matches the one we
         // selected, set the document content to the text area
         for(var i=0; i < newWord.parsedDocStore.length; i++) {
@@ -508,8 +504,18 @@ debugger
 
           if( docName === doc.documentName ) {
             // Set the document content to the text area
-            content.innerHTML = doc.documentContent || 'Just Write';
+            // @JC 2/12/18: commented out to use below
+            // content.innerHTML = doc.documentContent || 'Just Write';
+            content.innerHTML = doc.documentContent;
           }          
+
+          // @JC 2/12/18: Writes 'Just write' when user clicks new doc button
+          if( isNewDoc ) {
+            content.innerHTML =  'Just Write';
+            newWord.isNewDoc = false;
+            return;
+          }
+
         }
              
         // every N seconds, update the docuent store with the latest text area content
@@ -588,10 +594,11 @@ debugger
      *
      * Creates a new document when the user clicks the 'new document' button
      */
-    var newDocument = function() {
-      debugger
+    var newDocument = function() {    
+      
       document.querySelector( '#new-document' ).addEventListener('click', function(ev) {
         
+
         // @JC 13/08/18: set flag so we can save documents after one has been deleted
         newWord.documentDeleted = 0;
 
@@ -601,8 +608,11 @@ debugger
         // @JC 10/08/18: clear the timer so we are not createing multuple timers
         clearInterval( newWord.timer );
 
+        // @JC 2/12/18: add new doc var to the newWord object
+        newWord.isNewDoc = true;
+
         // @JC 10/08/18: addthe new docuemtn to localStorageItem
-        newDocumentLocalStorage( newWord.documentName );
+        newDocumentLocalStorage( newWord.documentName, newWord.isNewDoc );
 
         setSerialisedDocuments();
 
@@ -645,8 +655,7 @@ debugger
 
 
     // @JC 11/11/18: add a new document to the serialised docuemnt store
-    var setSerialisedDocuments = function() {  
-      debugger      
+    var setSerialisedDocuments = function() {        
       var documentStore = localStorage.getItem('documentStore');    
       var unParseddocumentStore = JSON.parse( documentStore );    
 
@@ -723,8 +732,7 @@ debugger
      * writes the new content to it
      *
      */
-    // var save = function() {
-    //   // debugger
+    // var save = function() {    
     //   clearInterval(newWord.timer);
     //   // newWord.timer = 0;
     //   localStorage.setItem( newWord.docEditorId, "");
