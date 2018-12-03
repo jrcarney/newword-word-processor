@@ -462,7 +462,8 @@ var newWord = (function() {
       
       // use this object as a foundation for populating the serialsed object ( for when things
       // go wroing with the object! )
-      var documentStore = [
+      var documentStore = 
+      [
         { "documentName": "a", "documentContent": "Soooo document A : D", "dateCreated": "31/10/18"},
         { "documentName": "blah", "documentContent": "Thats the bottom line", "dateCreated": "12/09/18"}    
       ]
@@ -505,16 +506,16 @@ var newWord = (function() {
           if( docName === doc.documentName ) {
             // Set the document content to the text area
             // @JC 2/12/18: commented out to use below
-            // content.innerHTML = doc.documentContent || 'Just Write';
-            content.innerHTML = doc.documentContent;
+            content.innerHTML = doc.documentContent || 'Just Write';
+            // content.innerHTML = doc.documentContent;
           }          
 
           // @JC 2/12/18: Writes 'Just write' when user clicks new doc button
-          if( isNewDoc ) {
-            content.innerHTML =  'Just Write';
-            newWord.isNewDoc = false;
-            return;
-          }
+          // if( isNewDoc ) {
+          //   content.innerHTML =  'Just Write';
+          //   newWord.isNewDoc = false;
+          //   return;
+          // }
 
         }
              
@@ -677,7 +678,20 @@ var newWord = (function() {
      */
     var deleteDocument = function() {
       document.getElementById('delete-document').addEventListener('click', function() {
-        console.log('delete-document reached');
+        // console.log('delete-document reached');
+        
+        // @JC 3/12/18: delete the selected document from the document store
+        var docList = JSON.parse( localStorage.documentStore );
+        for(var i=0; i < docList.length; i++ ) {
+          var doc = docList[i];
+          // console.log(doc.documentName);
+
+          if( newWord.documentName === doc.documentName ) {            
+            docList.splice(i,1);
+            docList = JSON.stringify(docList);
+            localStorage.setItem("documentStore", docList);
+          }
+        }
 
         localStorage.removeItem( newWord.documentName );
         document.getElementById( newWord.docEditorContent ).innerHTML = "No document selected";
