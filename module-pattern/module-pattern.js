@@ -510,6 +510,11 @@ var newWord = (function() {
             // content.innerHTML = doc.documentContent;
           }          
 
+          // @JC 8/12/18: set the text area with default text when a new document is created
+          if( isNewDoc ) {
+            content.innerHTML = 'Get writing...!';
+          }
+
           // @JC 2/12/18: Writes 'Just write' when user clicks new doc button
           // if( isNewDoc ) {
           //   content.innerHTML =  'Just Write';
@@ -529,6 +534,10 @@ var newWord = (function() {
           // update that document, then update the document store
           if( newWord.documentDeleted !== 1 ) {        
             
+            // @JC 8/12/18: in this async function, we need to get the document store
+            var docStore = localStorage.getItem("documentStore");
+            newWord.parsedDocStore = JSON.parse(docStore);
+
             for(var i=0; i < newWord.parsedDocStore.length; i++) {
               var doc = newWord.parsedDocStore[i];
                     
@@ -538,7 +547,7 @@ var newWord = (function() {
                   localStorage.setItem('documentStore', newWord.unParseddocumentStore);
                } 
             }            
-            // @JC 12/9/18
+            // @JC 8/12/18: not sure if we need this anymore??
             newWord.newlyCreatedDoc = 1;
           }
         }, 1000);
@@ -598,7 +607,7 @@ var newWord = (function() {
     var newDocument = function() {    
       
       document.querySelector( '#new-document' ).addEventListener('click', function(ev) {
-        
+        debugger  
 
         // @JC 13/08/18: set flag so we can save documents after one has been deleted
         newWord.documentDeleted = 0;
