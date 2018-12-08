@@ -615,6 +615,12 @@ var newWord = (function() {
         // console.log("clled newDocument");
         newWord.documentName = prompt("Name of document","");
 
+        // @JC 8/12/18: if no name was added when creating a document, display a message 
+        if( !newWord.documentName ) {
+          alert("You need to add a document name!");
+          return;
+        }
+
         // @JC 10/08/18: clear the timer so we are not createing multuple timers
         clearInterval( newWord.timer );
 
