@@ -1,8 +1,8 @@
 var newWord = (function() {
 
-//debugger
+  //debugger
 
-    /** # Priavate properties **/
+    /** # Private variables **/
     var commands = [
       {
         "name": "Highlight",
@@ -49,37 +49,35 @@ var newWord = (function() {
       }
     ];
 
-    // Module object for containing private properties
+    /** Module object which contains private properties **/
     var newWord = {};
     newWord.documentList = [];
     newWord.sortOrder = 1;
 
     /** # Private functions **/
 
-     /**
+    /**
      * Creates the newWord html (needed by the application) and adds it
      * before the closing body tag
      */
-     var setDocEditorId = function( docEditorId ) {
-       newWord.docEditorId = docEditorId;
-       newWord.docEditorToolbar = docEditorId+"-toolbar";
-       newWord.docEditorContent = docEditorId+"-content";
-     };
+    var setDocEditorId = function( docEditorId ) {
+      newWord.docEditorId = docEditorId;
+      newWord.docEditorToolbar = docEditorId+"-toolbar";
+      newWord.docEditorContent = docEditorId+"-content";
+    };
 
      /**
       * START: Create the word processor html
       */
-    var generateHtml = function() {
-      // @JC 31/8/18:
-      // create new elemtn
+    var generateHtml = function() {      
+      // Button that enables the user to create a document
       var createDocument = document.createElement('button');
-      createDocument.id = 'new-document';
+      createDocument.id = 'create-document';
       createDocument.textContent = 'Create new document';
       // Append the new document button to the root application element
       newWord.rootElement.appendChild(createDocument);
-
-      // @JC 31/8/18:
-      // create delete element
+            
+      // Button that enables the user to delete a document
       var deleteDocument = document.createElement('button');
       deleteDocument.id = 'delete-document';
       deleteDocument.textContent = 'Delete document';
@@ -410,7 +408,7 @@ var newWord = (function() {
      * Creates a new document when the user clicks the 'new document' button
      */
     var newDocument = function() {
-      document.querySelector( '#new-document' ).addEventListener('click', function(ev) {
+      document.querySelector( '#create-document' ).addEventListener('click', function(ev) {
         //debugger
         // @JC 13/08/18: set flag so we can save documents after one has been deleted
         newWord.documentDeleted = 0;
@@ -493,26 +491,6 @@ var newWord = (function() {
         });
     };
 
-    // old - not used
-    /**
-     * @JC 1/05/18: may not need this method keep just in case if tings start to mess up
-     * Alternatively jsut use chrome private mode which seesm to work better.
-     * its possible that extensions are cuasing the issue?
-     *
-     * To avoid any weird chrome / browser issues with not writing new content
-     * to local storage, save() clears the timer, sets editor to nothing and
-     * writes the new content to it
-     *
-     */
-    // var save = function() {
-    //   // debugger
-    //   clearInterval(newWord.timer);
-    //   // newWord.timer = 0;
-    //   localStorage.setItem( newWord.docEditorId, "");
-    //   localStorage.setItem( newWord.docEditorId, document.getElementById( newWord.docEditorId ).innerHTML);
-    // };
-
-
     /**
      * @JC 30/8/18:
      *
@@ -520,8 +498,9 @@ var newWord = (function() {
      * The root element must have an ID attribute for things to work.
      */
    var getRootElement = function() {
-     var rootEl = document.getElementById('newword-wrapper');
+     var rootEl = document.querySelector('#newword-wrapper');
      newWord.rootElement = rootEl;
+     debugger
    };
 
    /**
@@ -575,12 +554,6 @@ var newWord = (function() {
           theme( params );
         }
       }
-
-      //},
-      // just beofre
-      // exitApp: window.onbeforeunload = function(event) {
-      //  save();
-      // }
 })();
 
 // public API usage
