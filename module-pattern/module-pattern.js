@@ -69,49 +69,48 @@ var newWord = (function() {
      /**
       * START: Create the word processor html
       */
-    var generateHtml = function() {      
-      // Button that enables the user to create a document
+    var generateHtml = function() {    
+      // Message area: prompts the user to select or create a ne document
+      var deleteDocument = document.createElement('div');
+      deleteDocument.id = 'create-doc-msg';
+      deleteDocument.textContent = 'Select or create a new document';
+      // Append the messages to the root application element
+      newWord.rootElement.appendChild(deleteDocument);
+      
+      // Create document button: enables the user to create a document
       var createDocument = document.createElement('button');
       createDocument.id = 'create-document';
       createDocument.textContent = 'Create new document';
       // Append the new document button to the root application element
       newWord.rootElement.appendChild(createDocument);
             
-      // Button that enables the user to delete a document
+      // Delete document button: enables the user to delete a document
       var deleteDocument = document.createElement('button');
       deleteDocument.id = 'delete-document';
       deleteDocument.textContent = 'Delete document';
-      // Append the new document button to the root application element
+      // Append the delete document button to the root application element
       newWord.rootElement.appendChild(deleteDocument);
 
-      // @JC 31/8/18:
-      // create delete element
-      var deleteDocument = document.createElement('div');
-      deleteDocument.id = 'create-doc-msg';
-      deleteDocument.textContent = 'Select or create a new document';
-      // Append the new document button to the root application element
-      newWord.rootElement.appendChild(deleteDocument);
-
-      // @JC 17/9/18:
+      // Sort documents button: enables the user to sort documents
       var sortButton = document.createElement('button');
-      sortButton.id = 'cheap';
+      sortButton.id = 'sort-documents';
       sortButton.textContent = 'Sort';
       // Append the new document button to the root application element
       newWord.rootElement.appendChild(sortButton);
 
-      // # See readme: Document.createElement():
       // create a new div element
-      var newDiv = document.createElement("div");
+      var docuementContainer = document.createElement("div");
 
       // See https://developer.mozilla.org/en-US/docs/Web/API/Element/id for how to use the id property directly
-      newDiv.id = 'newword-container';
-      newDiv.style.display = 'none';
+      //docuementContainer.id = 'document-container';
+      docuementContainer.setAttribute('id','document-container')
+      docuementContainer.style.display = 'none';
 
       // # See readme: Add string of HTML inside another element
-      newDiv.innerHTML += `<div id="${newWord.docEditorToolbar}"></div><div id="${newWord.docEditorContent}" contenteditable="true"></div>`;
+      docuementContainer.innerHTML += `<div id="${newWord.docEditorToolbar}"></div><div id="${newWord.docEditorContent}" contenteditable="true"></div>`;
 
       // Append the text area to the root application element
-      newWord.rootElement.appendChild(newDiv);
+      newWord.rootElement.appendChild(docuementContainer);
 
       createToolbarButtons();
     };
@@ -284,8 +283,8 @@ var newWord = (function() {
           newDocumentLocalStorage( newWord.documentName );
 
           // @JC 26/8/18:  Display the text editor area
-          var a = document.getElementById("newword-container");
-          a.style.display = "block";
+          var documentContainer = document.getElementById("document-container");
+          documentContainer.style.display = "block";
 
           // @JC 26/8/18: remove selet or create document message
           var b = document.getElementById('create-doc-msg');
@@ -429,8 +428,8 @@ var newWord = (function() {
         // bodyp.removeChild( s );
 
         // Display the text editor area
-        var a = document.getElementById("newword-container");
-        a.style.display = "block";
+        var documentContainer = document.getElementById("document-container");
+        documentContainer.style.display = "block";
 
         // Add highlighted class to the currently selected item
         //ev.srcElement.className = 'selected-docuement';
@@ -483,7 +482,7 @@ var newWord = (function() {
     };
 
     var sortDocList = function() {
-        document.getElementById('cheap').addEventListener('click', function(ev) {
+        document.getElementById('sort-documents').addEventListener('click', function(ev) {
           //newWord.sortOrder = 0;
           getLocalStorageItems( newWord.sortOrder );
           sortTheDocuments();
@@ -499,8 +498,7 @@ var newWord = (function() {
      */
    var getRootElement = function() {
      var rootEl = document.querySelector('#newword-wrapper');
-     newWord.rootElement = rootEl;
-     debugger
+     newWord.rootElement = rootEl;    
    };
 
    /**
