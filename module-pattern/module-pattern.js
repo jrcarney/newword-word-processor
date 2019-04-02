@@ -1,9 +1,9 @@
-var newWord = (function() {
+let newWord = (function() {
 
   //debugger
 
     /** # Private variables **/
-    var commands = [
+    let commands = [
       {
         "name": "Highlight",
         "cmd": "backColor",
@@ -50,7 +50,7 @@ var newWord = (function() {
     ];
 
     /** Module object which contains private properties **/
-    var newWord = {};
+    let newWord = {};
     newWord.documentList = [];
     newWord.sortOrder = 1;
 
@@ -60,7 +60,7 @@ var newWord = (function() {
      * Creates the newWord html (needed by the application) and adds it
      * before the closing body tag
      */
-    var setDocEditorId = function( docEditorId ) {
+    let setDocEditorId = function( docEditorId ) {
       newWord.docEditorId = docEditorId;
       newWord.docEditorToolbar = docEditorId+"-toolbar";
       newWord.docEditorContent = docEditorId+"-content";
@@ -69,37 +69,37 @@ var newWord = (function() {
      /**
       * START: Create the word processor html
       */
-    var generateHtml = function() {    
+    let generateHtml = function() {    
       // Message area: prompts the user to select or create a ne document
-      var deleteDocument = document.createElement('div');
-      deleteDocument.id = `${newWord.docEditorId}-create-doc-msg`;
-      deleteDocument.textContent = 'Select or create a new document';
+      let createDocumentMessage = document.createElement('div');
+      createDocumentMessage.id = `${newWord.docEditorId}-create-doc-msg`;
+      createDocumentMessage.textContent = 'Select or create a new document';
       // Append the messages to the root application element
-      newWord.rootElement.appendChild(deleteDocument);
+      newWord.rootElement.appendChild(createDocumentMessage);
       
       // Create document button: enables the user to create a document
-      var createDocument = document.createElement('button');
+      let createDocument = document.createElement('button');
       createDocument.id = `${newWord.docEditorId}-create-document`;
       createDocument.textContent = 'Create new document';
       // Append the new document button to the root application element
       newWord.rootElement.appendChild(createDocument);
             
       // Delete document button: enables the user to delete a document
-      var deleteDocument = document.createElement('button');
-      deleteDocument.id = `${newWord.docEditorId}-delete-document`;
-      deleteDocument.textContent = 'Delete document';
+      let deleteDocumentButton = document.createElement('button');
+      deleteDocumentButton.id = `${newWord.docEditorId}-delete-document`;
+      deleteDocumentButton.textContent = 'Delete document';
       // Append the delete document button to the root application element
-      newWord.rootElement.appendChild(deleteDocument);
+      newWord.rootElement.appendChild(deleteDocumentButton);
 
       // Sort documents button: enables the user to sort documents
-      var sortButton = document.createElement('button');
+      let sortButton = document.createElement('button');
       sortButton.id = `${newWord.docEditorId}-sort-documents`;
       sortButton.textContent = 'Sort';
       // Append the new document button to the root application element
       newWord.rootElement.appendChild(sortButton);
 
       // create a new div element
-      var documentContainer = document.createElement("div");
+      let documentContainer = document.createElement("div");
 
       // See https://developer.mozilla.org/en-US/docs/Web/API/Element/id for how to use the id property directly
       //documentContainer.id = 'document-container';
@@ -120,27 +120,27 @@ var newWord = (function() {
      * - high priority: add some more buttons.
      * - low priority: enable the implementation to enable / disable buttons.
      */
-    var createToolbarButtons = function() {
-      var buttons = "";
+    let createToolbarButtons = function() {
+      let buttons = "";
       for(i=0; i<commands.length; i++) {
         console.log(commands[i]);
-        var command = commands[i];
+        let command = commands[i];
         buttons += `<button id="${command.cmd}-${newWord.docEditorToolbar}" class="toolbar-buttons" name="${command.cmd}" title="${command.title}" value="${command.value}" data-enableprompt="${command.enableprompt}">${command.name}</button>`;
       }
 
-      var editor = document.getElementById( newWord.docEditorToolbar );
+      let editor = document.getElementById( newWord.docEditorToolbar );
       editor.innerHTML += buttons;
 
       setToolbar();
     };
 
-    var setToolbar = function() {
-      var toolbar = document.getElementById( newWord.docEditorToolbar );
+    let setToolbar = function() {
+      let toolbar = document.getElementById( newWord.docEditorToolbar );
 
       // See readme: Get child elements (buttons) in the toolbar
-      for(var i=0; i<toolbar.children.length; i++) {
+      for(let i=0; i<toolbar.children.length; i++) {
         toolbar.children[i].addEventListener('click', function(ev) {
-          var val = "";
+          let val = "";
           if( this.dataset.enableprompt === "true" ) {
             val = prompt("Value for " + this.name + "?", val);
             val = val || "";
@@ -157,12 +157,12 @@ var newWord = (function() {
      */
 
      // @JC 16/9/18: attempt to sort document list
-     var getLocalStorageItems = function( reverse ) {
+     let getLocalStorageItems = function( reverse ) {
        newWord.documentList = [];
 
        // @JC 10/08/18: loop through localStorage, add a click handler to each item,
        // then dsiaply the documents contents in the editor
-       for(var i=0; i<localStorage.length; i++) {
+       for(let i=0; i<localStorage.length; i++) {
          console.log("prnt localStorage items and add click handler");
          newWord.documentList.push( Object.keys(localStorage)[i] );
        }
@@ -184,25 +184,26 @@ var newWord = (function() {
       //   selectDocument();
       // }, 10);
      };
+     
+     /**
+      * Sort the document list in ascending and descending order
+      */
 
-     // @JC 17/9/18: Sort the documents in ascending or descending order
-     var sortTheDocuments = function() {
-       // reverse the list
-       if( newWord.sortOrder === 0 ) {
-         // old way of reversing: note - it dosnt account for uppercase words which isnt good
-         // newWord.documentList = newWord.documentList.reverse();
-         //
-         newWord.documentList.sort(function(a, b) {
-           //debugger
-          var a = a.toLowerCase();
-           var b = b.toLowerCase();
-
-           var comparison = 0;
-           if (a < b) {
+     let sortTheDocuments = function() {
+      let firstWord;
+      let secondWord;
+      let comparison;
+       
+       if( newWord.sortOrder === 0 ) {                 
+         newWord.documentList.sort(function(a, b) {           
+          firstWord = a.toLowerCase();
+          secondWord = b.toLowerCase();
+           
+           if (firstWord < secondWord) {
              comparison = -1;
              // return -1;
            }
-           if (a > b) {
+           if (firstWord > secondWord) {
              comparison = 1;
              // return 1;
            }
@@ -211,24 +212,18 @@ var newWord = (function() {
            return comparison * -1;
          } );
          newWord.sortOrder = 1;
-         console.log(newWord.documentList);
-         // debugger
+         console.log(newWord.documentList);        
 
-      } else {
-        // old way of reversing: note - it dosnt account for uppercase words which isnt good
-        // newWord.documentList.sort();
+      } else {       
+        
+        newWord.documentList.sort(function(a, b) {          
+          firstWord = a.toLowerCase();
+          secondWord = b.toLowerCase();          
 
-        // sort list alphabeticaly
-        newWord.documentList.sort(function(a, b) {
-          //debugger
-         var a = a.toLowerCase();
-          var b = b.toLowerCase();
-
-          var comparison = 0;
-          if (a < b) {
+          if (firstWord < secondWord) {
             comparison =  -1;
           }
-          if (a > b) {
+          if (firstWord > secondWord) {
             comparison = 1;
           }
 
@@ -247,29 +242,29 @@ var newWord = (function() {
      * Display a list of the currently save documents, ie,
      * everything stored in localStorage
      */
-    var selectDocument = function() {
+    let selectDocument = function() {
       // get the localStorage object then call newDocumentLocalStorage and
       // pass the user selected document
 
       // @JC 16/9/18: rmeove the previous docuemt container
 
-      var bodyp = document.getElementById(newWord.rootElement.id);
-      var s = document.querySelector( `.${newWord.docEditorId}-doc-selector-container`);
+      let bodyp = document.getElementById(newWord.rootElement.id);
+      let s = document.querySelector( `.${newWord.docEditorId}-doc-selector-container`);
       if (s) {
         bodyp.removeChild( s );
       }
 
       // @JC 10/08/18: create a container for the docuent lsit to reside in
-      var docSelectorContainer = document.createElement("div");
+      let docSelectorContainer = document.createElement("div");
       docSelectorContainer.setAttribute('class',`${newWord.docEditorId}-doc-selector-container`);
 
       // @JC 10/08/18: loop through localStorage, add a click handler to each item,
       // then dsiaply the documents contents in the editor
-      for(var i=0; i<newWord.documentList.length; i++) {
+      for(let i=0; i<newWord.documentList.length; i++) {
       	console.log("prnt localStorage items and add click handler");
 
-        //var loopedItem = Object.keys(localStorage)[i];
-        var localStorageItem = document.createElement("p");
+        //let loopedItem = Object.keys(localStorage)[i];
+        let localStorageItem = document.createElement("p");
 
         localStorageItem.innerHTML += newWord.documentList[ i ];
         docSelectorContainer.appendChild( localStorageItem );
@@ -283,18 +278,18 @@ var newWord = (function() {
           newDocumentLocalStorage( newWord.documentName );
 
           // @JC 26/8/18:  Display the text editor area
-          var documentContainer = document.querySelector(`#${newWord.docEditorId}-document-container`);
+          let documentContainer = document.querySelector(`#${newWord.docEditorId}-document-container`);
           documentContainer.style.display = "block";
 
           // @JC 26/8/18: remove selet or create document message
-          var b = document.querySelector(`#${newWord.docEditorId}-create-doc-msg`);
+          let b = document.querySelector(`#${newWord.docEditorId}-create-doc-msg`);
           b.style.display = 'none';
 
           // @JC 31/8/18: Remove any previous highlighted classes
           // NOTE: this logic is pretty much doing the same as the code below
-          var docSelectorContainer = document.querySelector(`.${newWord.docEditorId}-doc-selector-container`);
-          for(var i=0; i<docSelectorContainer.children.length; i++) {
-          	var child = docSelectorContainer.children[ i ];
+          let docSelectorContainer = document.querySelector(`.${newWord.docEditorId}-doc-selector-container`);
+          for(let i=0; i<docSelectorContainer.children.length; i++) {
+          	let child = docSelectorContainer.children[ i ];
           	child.classList = [];
           }
           // Add highlighted class to the currently selected item
@@ -310,9 +305,9 @@ var newWord = (function() {
       // click handler so refactor to one functon
       if( newWord.newlyCreatedDoc  ) {
 
-        var docSelectorContainer = document.querySelector(`.${newWord.docEditorId}-doc-selector-container`);
-        for(var i=0; i<docSelectorContainer.children.length; i++) {
-          var child = docSelectorContainer.children[ i ];
+        let docSelectorContainer = document.querySelector(`.${newWord.docEditorId}-doc-selector-container`);
+        for(let i=0; i<docSelectorContainer.children.length; i++) {
+          let child = docSelectorContainer.children[ i ];
 
           if( newWord.documentName === child.innerHTML ) {
             child.setAttribute('class', `${newWord.docEditorId}-selected-document`);
@@ -327,7 +322,7 @@ var newWord = (function() {
      * - Once a document has been selected, regularly save it to local storage
      * - If no document has been selected, then dont display any document
      */
-    var newDocumentLocalStorage = function( docName ) {
+    let newDocumentLocalStorage = function( docName ) {
       // debugger
       /**
        * Word processor tutorial: BEGIN
@@ -336,9 +331,9 @@ var newWord = (function() {
        // add new content to each dedicated editor
        // -
        if( !docName ) {
-         var docName = newWord.docEditorContent;
+         let docName = newWord.docEditorContent;
        }
-      var content = document.getElementById( newWord.docEditorContent );
+      let content = document.getElementById( newWord.docEditorContent );
       content.innerHTML = localStorage.getItem( docName ) || 'Just Write';
       newWord.newDocumentTimer = setInterval(function() {
         if( !newWord.documentName ) {
@@ -358,19 +353,19 @@ var newWord = (function() {
     /**
      * Change the theme of the editor
      */
-    var theme = function( params ) {
+    let theme = function( params ) {
       if( params && params.themeColor === '' ) {
         return;
       }
       if( params && params.themeColor === 'dark' ) {
-        var editor = document.getElementById( newWord.docEditorContent );
+        let editor = document.getElementById( newWord.docEditorContent );
         editor.style.backgroundColor = '#383737';
         editor.style.color = '#fff';
         document.getElementById('body').style.backgroundColor = 'grey';
       }
 
       if( params && params.themeColor === 'camo' ) {
-        var editor = document.getElementById( newWord.docEditorContent );
+        let editor = document.getElementById( newWord.docEditorContent );
         // editor.style.backgroundColor = 'rgb(96, 117, 91)';
         editor.style.backgroundColor = '#748475';
         // document.getElementById('body').style.backgroundColor = '#dedede';
@@ -380,7 +375,7 @@ var newWord = (function() {
 
       if( params && params.themeColor === 'homebrew' ) {
         // content editor
-        var editor = document.getElementById( newWord.docEditorContent );
+        let editor = document.getElementById( newWord.docEditorContent );
         editor.style.backgroundColor = 'black';
         editor.style.color = '#01ff01';
         editor.style.fontFamily = 'monospace';
@@ -391,8 +386,8 @@ var newWord = (function() {
         document.getElementById('body').style.color = '#dedede';
 
         // document list
-        var themeDocList = document.getElementsByClassName(newWord.docEditorId+'-doc-selector-container')[0].children
-        for(var i=0; i<themeDocList.length; i++) {
+        let themeDocList = document.getElementsByClassName(newWord.docEditorId+'-doc-selector-container')[0].children
+        for(let i=0; i<themeDocList.length; i++) {
         	// console.log(a[ i ]);
         	themeDocList[ i ].style.color = '#9f9fff';
         }
@@ -406,7 +401,7 @@ var newWord = (function() {
      *
      * Creates a new document when the user clicks the 'new document' button
      */
-    var newDocument = function() {
+    let newDocument = function() {
       document.querySelector( `#${newWord.docEditorId}-create-document` ).addEventListener('click', function(ev) {
         //debugger
         // @JC 13/08/18: set flag so we can save documents after one has been deleted
@@ -423,12 +418,12 @@ var newWord = (function() {
 //debugger
         // @JC 10/08/18: remove the previous docuemtn list as now want to create a
         // new one with the newly added doc. To use our rootElement property, we must use the id DOM property
-        // var bodyp = document.getElementById(newWord.rootElement.id);
-        // var s = document.querySelector( '.doc-selector-container' );
+        // let bodyp = document.getElementById(newWord.rootElement.id);
+        // let s = document.querySelector( '.doc-selector-container' );
         // bodyp.removeChild( s );
 
         // Display the text editor area
-        var documentContainer = document.querySelector(`#${newWord.docEditorId}-document-container`);
+        let documentContainer = document.querySelector(`#${newWord.docEditorId}-document-container`);
         documentContainer.style.display = "block";
 
         // Add highlighted class to the currently selected item
@@ -450,7 +445,7 @@ var newWord = (function() {
     /**
      * Delete the currently selected document
      */
-    var deleteDocument = function() {
+    let deleteDocument = function() {
       document.querySelector(`#${newWord.docEditorId}-delete-document`).addEventListener('click', function() {
         console.log('delete-document reached');
 
@@ -461,8 +456,8 @@ var newWord = (function() {
 
         // @JC 10/08/18: remove the previous document list as now want to create a
         // new one with the newly added doc
-        var rootEl = document.getElementById(newWord.rootElement.id);
-        var s = document.querySelector(`.${newWord.docEditorId}-doc-selector-container`);
+        let rootEl = document.getElementById(newWord.rootElement.id);
+        let s = document.querySelector(`.${newWord.docEditorId}-doc-selector-container`);
         rootEl.removeChild( s );
 
         getLocalStorageItems();
@@ -481,7 +476,7 @@ var newWord = (function() {
       });
     };
 
-    var sortDocList = function() {
+    let sortDocList = function() {
         document.querySelector(`#${newWord.docEditorId}-sort-documents`).addEventListener('click', function(ev) {
           //newWord.sortOrder = 0;
           getLocalStorageItems( newWord.sortOrder );
@@ -496,8 +491,8 @@ var newWord = (function() {
      * Get a reference to newword-wrapper.
      * The root element must have an ID attribute for things to work.
      */
-   var getRootElement = function() {
-     var rootEl = document.querySelector('#newword-wrapper');
+   let getRootElement = function() {
+     let rootEl = document.querySelector('#newword-wrapper');
      newWord.rootElement = rootEl;    
    };
 
@@ -507,7 +502,7 @@ var newWord = (function() {
     * @return {[type]}        [description]
     */
 
-    var init = function( params ) {
+    let init = function( params ) {
 
         // set defaults
         if( !params ) {
