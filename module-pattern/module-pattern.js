@@ -99,18 +99,18 @@ var newWord = (function() {
       newWord.rootElement.appendChild(sortButton);
 
       // create a new div element
-      var docuementContainer = document.createElement("div");
+      var documentContainer = document.createElement("div");
 
       // See https://developer.mozilla.org/en-US/docs/Web/API/Element/id for how to use the id property directly
-      //docuementContainer.id = 'document-container';
-      docuementContainer.setAttribute('id',`${newWord.docEditorId}-document-container`)
-      docuementContainer.style.display = 'none';
+      //documentContainer.id = 'document-container';
+      documentContainer.setAttribute('id',`${newWord.docEditorId}-document-container`)
+      documentContainer.style.display = 'none';
 
       // # See readme: Add string of HTML inside another element
-      docuementContainer.innerHTML += `<div id="${newWord.docEditorToolbar}"></div><div id="${newWord.docEditorContent}" contenteditable="true"></div>`;
+      documentContainer.innerHTML += `<div id="${newWord.docEditorToolbar}"></div><div id="${newWord.docEditorContent}" contenteditable="true"></div>`;
 
       // Append the text area to the root application element
-      newWord.rootElement.appendChild(docuementContainer);
+      newWord.rootElement.appendChild(documentContainer);
 
       createToolbarButtons();
     };
