@@ -40,7 +40,7 @@ div:focus {
   background-color: #ececec;
 }
 
-#create-doc-msg {
+#newword-create-doc-msg {
   background-color: white;
   padding: 10px;
 }
@@ -48,11 +48,11 @@ div:focus {
 /**
  * Document select list
  */
-.doc-selector-container p {
+.newword-doc-selector-container p {
   cursor: pointer;
 }
 
-.selected-docuement {
+.newword-selected-document {
   background-color: lightgrey;
   padding: 10px;
 }

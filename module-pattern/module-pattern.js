@@ -72,28 +72,28 @@ var newWord = (function() {
     var generateHtml = function() {    
       // Message area: prompts the user to select or create a ne document
       var deleteDocument = document.createElement('div');
-      deleteDocument.id = 'create-doc-msg';
+      deleteDocument.id = `${newWord.docEditorId}-create-doc-msg`;
       deleteDocument.textContent = 'Select or create a new document';
       // Append the messages to the root application element
       newWord.rootElement.appendChild(deleteDocument);
       
       // Create document button: enables the user to create a document
       var createDocument = document.createElement('button');
-      createDocument.id = 'create-document';
+      createDocument.id = `${newWord.docEditorId}-create-document`;
       createDocument.textContent = 'Create new document';
       // Append the new document button to the root application element
       newWord.rootElement.appendChild(createDocument);
             
       // Delete document button: enables the user to delete a document
       var deleteDocument = document.createElement('button');
-      deleteDocument.id = 'delete-document';
+      deleteDocument.id = `${newWord.docEditorId}-delete-document`;
       deleteDocument.textContent = 'Delete document';
       // Append the delete document button to the root application element
       newWord.rootElement.appendChild(deleteDocument);
 
       // Sort documents button: enables the user to sort documents
       var sortButton = document.createElement('button');
-      sortButton.id = 'sort-documents';
+      sortButton.id = `${newWord.docEditorId}-sort-documents`;
       sortButton.textContent = 'Sort';
       // Append the new document button to the root application element
       newWord.rootElement.appendChild(sortButton);
@@ -103,7 +103,7 @@ var newWord = (function() {
 
       // See https://developer.mozilla.org/en-US/docs/Web/API/Element/id for how to use the id property directly
       //docuementContainer.id = 'document-container';
-      docuementContainer.setAttribute('id','document-container')
+      docuementContainer.setAttribute('id',`${newWord.docEditorId}-document-container`)
       docuementContainer.style.display = 'none';
 
       // # See readme: Add string of HTML inside another element
@@ -254,14 +254,14 @@ var newWord = (function() {
       // @JC 16/9/18: rmeove the previous docuemt container
 
       var bodyp = document.getElementById(newWord.rootElement.id);
-      var s = document.querySelector( '.doc-selector-container' );
+      var s = document.querySelector( `.${newWord.docEditorId}-doc-selector-container`);
       if (s) {
         bodyp.removeChild( s );
       }
 
       // @JC 10/08/18: create a container for the docuent lsit to reside in
       var docSelectorContainer = document.createElement("div");
-      docSelectorContainer.setAttribute('class','doc-selector-container');
+      docSelectorContainer.setAttribute('class',`${newWord.docEditorId}-doc-selector-container`);
 
       // @JC 10/08/18: loop through localStorage, add a click handler to each item,
       // then dsiaply the documents contents in the editor
@@ -283,22 +283,22 @@ var newWord = (function() {
           newDocumentLocalStorage( newWord.documentName );
 
           // @JC 26/8/18:  Display the text editor area
-          var documentContainer = document.getElementById("document-container");
+          var documentContainer = document.querySelector(`#${newWord.docEditorId}-document-container`);
           documentContainer.style.display = "block";
 
           // @JC 26/8/18: remove selet or create document message
-          var b = document.getElementById('create-doc-msg');
+          var b = document.querySelector(`#${newWord.docEditorId}-create-doc-msg`);
           b.style.display = 'none';
 
           // @JC 31/8/18: Remove any previous highlighted classes
           // NOTE: this logic is pretty much doing the same as the code below
-          var docSelectorContainer = document.querySelector('.doc-selector-container');
+          var docSelectorContainer = document.querySelector(`.${newWord.docEditorId}-doc-selector-container`);
           for(var i=0; i<docSelectorContainer.children.length; i++) {
           	var child = docSelectorContainer.children[ i ];
           	child.classList = [];
           }
           // Add highlighted class to the currently selected item
-          ev.srcElement.className = 'selected-docuement';
+          ev.srcElement.className = `${newWord.docEditorId}-selected-document`;
         });
 
         // Append the document selector to the root element
@@ -310,12 +310,12 @@ var newWord = (function() {
       // click handler so refactor to one functon
       if( newWord.newlyCreatedDoc  ) {
 
-        var docSelectorContainer = document.querySelector('.doc-selector-container');
+        var docSelectorContainer = document.querySelector(`.${newWord.docEditorId}-doc-selector-container`);
         for(var i=0; i<docSelectorContainer.children.length; i++) {
           var child = docSelectorContainer.children[ i ];
 
           if( newWord.documentName === child.innerHTML ) {
-            child.setAttribute('class', 'selected-docuement');
+            child.setAttribute('class', `${newWord.docEditorId}-selected-document`);
           }
         }
       }
@@ -391,7 +391,7 @@ var newWord = (function() {
         document.getElementById('body').style.color = '#dedede';
 
         // document list
-        var themeDocList = document.getElementsByClassName('doc-selector-container')[0].children
+        var themeDocList = document.getElementsByClassName(newWord.docEditorId+'-doc-selector-container')[0].children
         for(var i=0; i<themeDocList.length; i++) {
         	// console.log(a[ i ]);
         	themeDocList[ i ].style.color = '#9f9fff';
@@ -407,7 +407,7 @@ var newWord = (function() {
      * Creates a new document when the user clicks the 'new document' button
      */
     var newDocument = function() {
-      document.querySelector( '#create-document' ).addEventListener('click', function(ev) {
+      document.querySelector( `#${newWord.docEditorId}-create-document` ).addEventListener('click', function(ev) {
         //debugger
         // @JC 13/08/18: set flag so we can save documents after one has been deleted
         newWord.documentDeleted = 0;
@@ -428,11 +428,11 @@ var newWord = (function() {
         // bodyp.removeChild( s );
 
         // Display the text editor area
-        var documentContainer = document.getElementById("document-container");
+        var documentContainer = document.querySelector(`#${newWord.docEditorId}-document-container`);
         documentContainer.style.display = "block";
 
         // Add highlighted class to the currently selected item
-        //ev.srcElement.className = 'selected-docuement';
+        //ev.srcElement.className = 'selected-document';
 
         // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
         setTimeout(function() {
@@ -451,7 +451,7 @@ var newWord = (function() {
      * Delete the currently selected document
      */
     var deleteDocument = function() {
-      document.getElementById('delete-document').addEventListener('click', function() {
+      document.querySelector(`#${newWord.docEditorId}-delete-document`).addEventListener('click', function() {
         console.log('delete-document reached');
 
         localStorage.removeItem( newWord.documentName );
@@ -462,7 +462,7 @@ var newWord = (function() {
         // @JC 10/08/18: remove the previous document list as now want to create a
         // new one with the newly added doc
         var rootEl = document.getElementById(newWord.rootElement.id);
-        var s = document.querySelector( '.doc-selector-container' );
+        var s = document.querySelector(`.${newWord.docEditorId}-doc-selector-container`);
         rootEl.removeChild( s );
 
         getLocalStorageItems();
@@ -482,7 +482,7 @@ var newWord = (function() {
     };
 
     var sortDocList = function() {
-        document.getElementById('sort-documents').addEventListener('click', function(ev) {
+        document.querySelector(`#${newWord.docEditorId}-sort-documents`).addEventListener('click', function(ev) {
           //newWord.sortOrder = 0;
           getLocalStorageItems( newWord.sortOrder );
           sortTheDocuments();
