@@ -1,4 +1,4 @@
-let newWord = (function() {
+let newWord = (() => {
 
   //debugger
 
@@ -60,7 +60,7 @@ let newWord = (function() {
      * Creates the newWord html (needed by the application) and adds it
      * before the closing body tag
      */
-    let setDocEditorId = function( docEditorId ) {
+    let setDocEditorId = (docEditorId) => {      
       newWord.docEditorId = docEditorId;
       newWord.docEditorToolbar = docEditorId+"-toolbar";
       newWord.docEditorContent = docEditorId+"-content";
@@ -69,7 +69,7 @@ let newWord = (function() {
      /**
       * START: Create the word processor html
       */
-    let generateHtml = function() {    
+    let generateHtml = () => {    
       // Message area: prompts the user to select or create a ne document
       let createDocumentMessage = document.createElement('div');
       createDocumentMessage.id = `${newWord.docEditorId}-create-doc-msg`;
@@ -120,7 +120,7 @@ let newWord = (function() {
      * - high priority: add some more buttons.
      * - low priority: enable the implementation to enable / disable buttons.
      */
-    let createToolbarButtons = function() {
+    let createToolbarButtons = () => {
       let buttons = "";
       for(i=0; i<commands.length; i++) {
         console.log(commands[i]);
@@ -134,11 +134,12 @@ let newWord = (function() {
       setToolbar();
     };
 
-    let setToolbar = function() {
+    let setToolbar = () => {
       let toolbar = document.getElementById( newWord.docEditorToolbar );
 
       // See readme: Get child elements (buttons) in the toolbar
       for(let i=0; i<toolbar.children.length; i++) {
+        // ** not able to use fat arrow function for some reason
         toolbar.children[i].addEventListener('click', function(ev) {
           let val = "";
           if( this.dataset.enableprompt === "true" ) {
@@ -157,7 +158,7 @@ let newWord = (function() {
      */
 
      // @JC 16/9/18: attempt to sort document list
-     let getLocalStorageItems = function( reverse ) {
+     let getLocalStorageItems = ( reverse ) => {
        newWord.documentList = [];
 
        // @JC 10/08/18: loop through localStorage, add a click handler to each item,
@@ -189,13 +190,13 @@ let newWord = (function() {
       * Sort the document list in ascending and descending order
       */
 
-     let sortTheDocuments = function() {
+     let sortTheDocuments = () => {
       let firstWord;
       let secondWord;
       let comparison;
        
        if( newWord.sortOrder === 0 ) {                 
-         newWord.documentList.sort(function(a, b) {           
+         newWord.documentList.sort((a, b) => {           
           firstWord = a.toLowerCase();
           secondWord = b.toLowerCase();
            
@@ -215,8 +216,8 @@ let newWord = (function() {
          console.log(newWord.documentList);        
 
       } else {       
-        
-        newWord.documentList.sort(function(a, b) {          
+
+        newWord.documentList.sort((a, b) => {          
           firstWord = a.toLowerCase();
           secondWord = b.toLowerCase();          
 
@@ -242,7 +243,7 @@ let newWord = (function() {
      * Display a list of the currently save documents, ie,
      * everything stored in localStorage
      */
-    let selectDocument = function() {
+    let selectDocument = () => {
       // get the localStorage object then call newDocumentLocalStorage and
       // pass the user selected document
 
@@ -269,7 +270,7 @@ let newWord = (function() {
         localStorageItem.innerHTML += newWord.documentList[ i ];
         docSelectorContainer.appendChild( localStorageItem );
 
-        localStorageItem.addEventListener('click', function(ev) {
+        localStorageItem.addEventListener('click', (ev) => {
 
           clearInterval( newWord.timer );
 
@@ -322,7 +323,7 @@ let newWord = (function() {
      * - Once a document has been selected, regularly save it to local storage
      * - If no document has been selected, then dont display any document
      */
-    let newDocumentLocalStorage = function( docName ) {
+    let newDocumentLocalStorage = ( docName ) => {
       // debugger
       /**
        * Word processor tutorial: BEGIN
@@ -335,7 +336,7 @@ let newWord = (function() {
        }
       let content = document.getElementById( newWord.docEditorContent );
       content.innerHTML = localStorage.getItem( docName ) || 'Just Write';
-      newWord.newDocumentTimer = setInterval(function() {
+      newWord.newDocumentTimer = setInterval(() => {
         if( !newWord.documentName ) {
           return;
         }
@@ -353,7 +354,7 @@ let newWord = (function() {
     /**
      * Change the theme of the editor
      */
-    let theme = function( params ) {
+    let theme = ( params ) => {
       if( params && params.themeColor === '' ) {
         return;
       }
@@ -401,8 +402,8 @@ let newWord = (function() {
      *
      * Creates a new document when the user clicks the 'new document' button
      */
-    let newDocument = function() {
-      document.querySelector( `#${newWord.docEditorId}-create-document` ).addEventListener('click', function(ev) {
+    let newDocument = () => {
+      document.querySelector( `#${newWord.docEditorId}-create-document` ).addEventListener('click', (ev) => {
         //debugger
         // @JC 13/08/18: set flag so we can save documents after one has been deleted
         newWord.documentDeleted = 0;
@@ -430,7 +431,7 @@ let newWord = (function() {
         //ev.srcElement.className = 'selected-document';
 
         // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
-        setTimeout(function() {
+        setTimeout(() => {
           // debugger
 
           getLocalStorageItems();
@@ -445,8 +446,8 @@ let newWord = (function() {
     /**
      * Delete the currently selected document
      */
-    let deleteDocument = function() {
-      document.querySelector(`#${newWord.docEditorId}-delete-document`).addEventListener('click', function() {
+    let deleteDocument = () => {
+      document.querySelector(`#${newWord.docEditorId}-delete-document`).addEventListener('click', () => {
         console.log('delete-document reached');
 
         localStorage.removeItem( newWord.documentName );
@@ -463,7 +464,7 @@ let newWord = (function() {
         getLocalStorageItems();
 
         // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
-        setTimeout(function() {
+        setTimeout(() => {
           // selectDocument();
 
           getLocalStorageItems();
@@ -476,8 +477,8 @@ let newWord = (function() {
       });
     };
 
-    let sortDocList = function() {
-        document.querySelector(`#${newWord.docEditorId}-sort-documents`).addEventListener('click', function(ev) {
+    let sortDocList = () => {
+        document.querySelector(`#${newWord.docEditorId}-sort-documents`).addEventListener('click', (ev) => {
           //newWord.sortOrder = 0;
           getLocalStorageItems( newWord.sortOrder );
           sortTheDocuments();
@@ -491,7 +492,7 @@ let newWord = (function() {
      * Get a reference to newword-wrapper.
      * The root element must have an ID attribute for things to work.
      */
-   let getRootElement = function() {
+   let getRootElement = () => {
      let rootEl = document.querySelector('#newword-wrapper');
      newWord.rootElement = rootEl;    
    };
@@ -502,7 +503,7 @@ let newWord = (function() {
     * @return {[type]}        [description]
     */
 
-    let init = function( params ) {
+    let init = ( params ) => {
 
         // set defaults
         if( !params ) {
@@ -543,7 +544,7 @@ let newWord = (function() {
       /** ## PUBLIC API  ## **/
       return {
         // Allows user to change color of the application
-        changeTheme: function( params ) {
+        changeTheme: ( params ) => {
           theme( params );
         }
       }
