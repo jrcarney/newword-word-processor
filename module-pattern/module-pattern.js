@@ -244,6 +244,7 @@ let newWord = (() => {
      * everything stored in localStorage
      */
     let selectDocument = () => {
+      
       // get the localStorage object then call newDocumentLocalStorage and
       // pass the user selected document
 
@@ -270,8 +271,8 @@ let newWord = (() => {
         localStorageItem.innerHTML += newWord.documentList[ i ];
         docSelectorContainer.appendChild( localStorageItem );
 
-        localStorageItem.addEventListener('click', (ev) => {
-
+        localStorageItem.addEventListener('click', (ev) => {        
+          newWord.documentDeleted=0;
           clearInterval( newWord.timer );
 
           console.log("// ev.srcElement.innerHTML is "+ev.srcElement.innerHTML);
