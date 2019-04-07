@@ -51,7 +51,7 @@ let newWord = (() => {
 
     /** Module object which contains private properties **/
     let newWord = {};
-    newWord.documentList = [];
+    newWord.documentList; 
     newWord.sortOrder = 1;
 
     /** # Private functions **/
@@ -66,9 +66,9 @@ let newWord = (() => {
       newWord.docEditorContent = docEditorId+"-content";
     };
 
-     /**
+     /********************************************************************************************************************
       * START: Create the word processor html
-      */
+      *******************************************************************************************************************/
     let generateHtml = () => {    
       // Message area: prompts the user to select or create a ne document
       let createDocumentMessage = document.createElement('div');
@@ -153,37 +153,22 @@ let newWord = (() => {
       }
     };
 
-    /**
+    /******************************************************************************************************************
      * END: Create the word processor html
-     */
+     ******************************************************************************************************************/
 
-     // @JC 16/9/18: attempt to sort document list
+     /**
+      * Gets items from local storage for use in the application
+      */
      let getLocalStorageItems = ( reverse ) => {
        newWord.documentList = [];
 
        // @JC 10/08/18: loop through localStorage, add a click handler to each item,
        // then dsiaply the documents contents in the editor
        for(let i=0; i<localStorage.length; i++) {
-         console.log("prnt localStorage items and add click handler");
+         // console.log("prnt localStorage items and add click handler");
          newWord.documentList.push( Object.keys(localStorage)[i] );
        }
-
-      //  if( newWord.sortOrder === 0 ) {
-      //    newWord.documentList = newWord.documentList.reverse();
-      //    newWord.sortOrder = 1;
-      //    console.log(newWord.documentList);
-      //    // debugger
-      //
-      // } else {
-      //   // debugger
-      //   newWord.documentList.sort();
-      //   newWord.sortOrder = 0;
-      // }
-
-      // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
-      // setTimeout(function() {
-      //   selectDocument();
-      // }, 10);
      };
      
      /**
@@ -515,7 +500,6 @@ let newWord = (() => {
     };
 
    /**
-    * This is where we create our application
     * @param  {[type]} params [description]
     * @return {[type]}        [description]
     */
