@@ -249,12 +249,14 @@ let newWord = (() => {
       // pass the user selected document
 
       // @JC 16/9/18: rmeove the previous docuemt container
+      // let rootElId = document.getElementById(newWord.rootElement.id);
+      // let removeDocSelectorContainer = document.querySelector( `.${newWord.docEditorId}-doc-selector-container`);
+      // if (removeDocSelectorContainer) {
+      //   rootElId.removeChild( removeDocSelectorContainer );
+      // }
 
-      let bodyp = document.getElementById(newWord.rootElement.id);
-      let s = document.querySelector( `.${newWord.docEditorId}-doc-selector-container`);
-      if (s) {
-        bodyp.removeChild( s );
-      }
+      // JC: 7/4/19
+      removeDocumentSelectContainer();
 
       // @JC 10/08/18: create a container for the docuent lsit to reside in
       let docSelectorContainer = document.createElement("div");
@@ -420,9 +422,9 @@ let newWord = (() => {
 //debugger
         // @JC 10/08/18: remove the previous docuemtn list as now want to create a
         // new one with the newly added doc. To use our rootElement property, we must use the id DOM property
-        // let bodyp = document.getElementById(newWord.rootElement.id);
-        // let s = document.querySelector( '.doc-selector-container' );
-        // bodyp.removeChild( s );
+        // let rootElId = document.getElementById(newWord.rootElement.id);
+        // let removeDocSelectorContainer = document.querySelector( '.doc-selector-container' );
+        // rootElId.removeChild( removeDocSelectorContainer );
 
         // Display the text editor area
         let documentContainer = document.querySelector(`#${newWord.docEditorId}-document-container`);
@@ -458,9 +460,12 @@ let newWord = (() => {
 
         // @JC 10/08/18: remove the previous document list as now want to create a
         // new one with the newly added doc
-        let rootEl = document.getElementById(newWord.rootElement.id);
-        let s = document.querySelector(`.${newWord.docEditorId}-doc-selector-container`);
-        rootEl.removeChild( s );
+        // let rootEl = document.getElementById(newWord.rootElement.id);
+        // let removeDocSelectorContainer = document.querySelector(`.${newWord.docEditorId}-doc-selector-container`);
+        // rootEl.removeChild( removeDocSelectorContainer );
+
+        // JC: 7/4/19
+        removeDocumentSelectContainer();
 
         getLocalStorageItems();
 
@@ -493,17 +498,27 @@ let newWord = (() => {
      * Get a reference to newword-wrapper.
      * The root element must have an ID attribute for things to work.
      */
-   let getRootElement = () => {
-     let rootEl = document.querySelector('#newword-wrapper');
-     newWord.rootElement = rootEl;    
-   };
+    let getRootElement = () => {
+      let rootEl = document.querySelector('#newword-wrapper');
+      newWord.rootElement = rootEl;    
+    };
+
+   /**
+    * Remove document select container  
+    */
+    let removeDocumentSelectContainer = () => {      
+      let rootElId = document.getElementById(newWord.rootElement.id);
+      let documentContainer = document.querySelector(`.${newWord.docEditorId}-doc-selector-container`);
+      if (documentContainer) {
+        rootElId.removeChild( documentContainer );
+      }
+    };
 
    /**
     * This is where we create our application
     * @param  {[type]} params [description]
     * @return {[type]}        [description]
     */
-
     let init = ( params ) => {
 
         // set defaults
