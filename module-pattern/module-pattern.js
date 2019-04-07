@@ -123,7 +123,7 @@ let newWord = (() => {
     let createToolbarButtons = () => {
       let buttons = "";
       for(i=0; i<commands.length; i++) {
-        console.log(commands[i]);
+        // console.log(commands[i]);
         let command = commands[i];
         buttons += `<button id="${command.cmd}-${newWord.docEditorToolbar}" class="toolbar-buttons" name="${command.cmd}" title="${command.title}" value="${command.value}" data-enableprompt="${command.enableprompt}">${command.name}</button>`;
       }
@@ -174,7 +174,6 @@ let newWord = (() => {
      /**
       * Sort the document list in ascending and descending order
       */
-
      let sortTheDocuments = () => {
       let firstWord;
       let secondWord;
@@ -198,7 +197,7 @@ let newWord = (() => {
            return comparison * -1;
          } );
          newWord.sortOrder = 1;
-         console.log(newWord.documentList);        
+         // console.log(newWord.documentList);        
 
       } else {       
 
@@ -218,7 +217,7 @@ let newWord = (() => {
         } );
 
         newWord.sortOrder = 0;
-        console.log(newWord.documentList);
+        // console.log(newWord.documentList);
       }
      };
 
@@ -233,13 +232,6 @@ let newWord = (() => {
       // get the localStorage object then call newDocumentLocalStorage and
       // pass the user selected document
 
-      // @JC 16/9/18: rmeove the previous docuemt container
-      // let rootElId = document.getElementById(newWord.rootElement.id);
-      // let removeDocSelectorContainer = document.querySelector( `.${newWord.docEditorId}-doc-selector-container`);
-      // if (removeDocSelectorContainer) {
-      //   rootElId.removeChild( removeDocSelectorContainer );
-      // }
-
       // JC: 7/4/19
       removeDocumentSelectContainer();
 
@@ -250,7 +242,7 @@ let newWord = (() => {
       // @JC 10/08/18: loop through localStorage, add a click handler to each item,
       // then dsiaply the documents contents in the editor
       for(let i=0; i<newWord.documentList.length; i++) {
-      	console.log("prnt localStorage items and add click handler");
+      	// console.log("prnt localStorage items and add click handler");
 
         //let loopedItem = Object.keys(localStorage)[i];
         let localStorageItem = document.createElement("p");
@@ -262,7 +254,7 @@ let newWord = (() => {
           newWord.documentDeleted=0;
           clearInterval( newWord.timer );
 
-          console.log("// ev.srcElement.innerHTML is "+ev.srcElement.innerHTML);
+          // console.log("// ev.srcElement.innerHTML is "+ev.srcElement.innerHTML);
           newWord.documentName = ev.srcElement.innerHTML;
           newDocumentLocalStorage( newWord.documentName );
 
@@ -271,8 +263,8 @@ let newWord = (() => {
           documentContainer.style.display = "block";
 
           // @JC 26/8/18: remove selet or create document message
-          let b = document.querySelector(`#${newWord.docEditorId}-create-doc-msg`);
-          b.style.display = 'none';
+          let createDocMsg = document.querySelector(`#${newWord.docEditorId}-create-doc-msg`);
+          createDocMsg.style.display = 'none';
 
           // @JC 31/8/18: Remove any previous highlighted classes
           // NOTE: this logic is pretty much doing the same as the code below
@@ -396,7 +388,7 @@ let newWord = (() => {
         // @JC 13/08/18: set flag so we can save documents after one has been deleted
         newWord.documentDeleted = 0;
 
-        console.log("clled newDocument");
+        // console.log("clled newDocument");
         newWord.documentName = prompt("Name of document","");
 
         // @JC 10/08/18: clear the timer so we are not createing multuple timers
@@ -404,29 +396,17 @@ let newWord = (() => {
 
         // @JC 10/08/18: addthe new docuemtn to localStorageItem
         newDocumentLocalStorage( newWord.documentName );
-//debugger
-        // @JC 10/08/18: remove the previous docuemtn list as now want to create a
-        // new one with the newly added doc. To use our rootElement property, we must use the id DOM property
-        // let rootElId = document.getElementById(newWord.rootElement.id);
-        // let removeDocSelectorContainer = document.querySelector( '.doc-selector-container' );
-        // rootElId.removeChild( removeDocSelectorContainer );
 
         // Display the text editor area
         let documentContainer = document.querySelector(`#${newWord.docEditorId}-document-container`);
         documentContainer.style.display = "block";
 
-        // Add highlighted class to the currently selected item
-        //ev.srcElement.className = 'selected-document';
-
         // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
         setTimeout(() => {
-          // debugger
-
           getLocalStorageItems();
           newWord.sortOrder = 1; // Sort alphabeticaly when we create an item
           sortTheDocuments();
           selectDocument();
-
         }, 100);
       } );
     };
@@ -436,18 +416,12 @@ let newWord = (() => {
      */
     let deleteDocument = () => {
       document.querySelector(`#${newWord.docEditorId}-delete-document`).addEventListener('click', () => {
-        console.log('delete-document reached');
+        // console.log('delete-document reached');
 
         localStorage.removeItem( newWord.documentName );
         document.getElementById( newWord.docEditorContent ).innerHTML = "No document selected";
 
         newWord.documentDeleted = 1;
-
-        // @JC 10/08/18: remove the previous document list as now want to create a
-        // new one with the newly added doc
-        // let rootEl = document.getElementById(newWord.rootElement.id);
-        // let removeDocSelectorContainer = document.querySelector(`.${newWord.docEditorId}-doc-selector-container`);
-        // rootEl.removeChild( removeDocSelectorContainer );
 
         // JC: 7/4/19
         removeDocumentSelectContainer();
@@ -456,14 +430,10 @@ let newWord = (() => {
 
         // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
         setTimeout(() => {
-          // selectDocument();
-
           getLocalStorageItems();
           newWord.sortOrder = 1; // Sort alphabeticaly when we delete an item
           sortTheDocuments();
           selectDocument();
-
-
         }, 10);
       });
     };
