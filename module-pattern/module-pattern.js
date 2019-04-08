@@ -166,8 +166,11 @@ let newWord = (() => {
        // @JC 10/08/18: loop through localStorage, add a click handler to each item,
        // then dsiaply the documents contents in the editor
        for(let i=0; i<localStorage.length; i++) {
+         // debugger
+         let removeNewword = Object.keys(localStorage)[i];
+         removeNewword = removeNewword.replace('newword-', '')
          // console.log("prnt localStorage items and add click handler");
-         newWord.documentList.push( Object.keys(localStorage)[i] );
+         newWord.documentList.push(removeNewword);
        }
      };
      
@@ -314,15 +317,16 @@ let newWord = (() => {
        if( !docName ) {
          let docName = newWord.docEditorContent;
        }
+
       let content = document.getElementById( newWord.docEditorContent );
-      content.innerHTML = localStorage.getItem( docName ) || 'Just Write';
+      content.innerHTML = localStorage.getItem( `${newWord.docEditorId}-${docName}` ) || 'Just Write';
       newWord.newDocumentTimer = setInterval(() => {
         if( !newWord.documentName ) {
           return;
         }
 
         if( newWord.documentDeleted !== 1 ) {
-          localStorage.setItem( newWord.documentName, document.getElementById( newWord.docEditorContent ).innerHTML);
+          localStorage.setItem( `${newWord.docEditorId}-${newWord.documentName}`, document.getElementById( newWord.docEditorContent ).innerHTML);
 
           // @JC 12/9/18
           newWord.newlyCreatedDoc = 1;
@@ -418,7 +422,7 @@ let newWord = (() => {
       document.querySelector(`#${newWord.docEditorId}-delete-document`).addEventListener('click', () => {
         // console.log('delete-document reached');
 
-        localStorage.removeItem( newWord.documentName );
+        localStorage.removeItem( `${newWord.docEditorId}-${newWord.documentName}` );
         document.getElementById( newWord.docEditorContent ).innerHTML = "No document selected";
 
         newWord.documentDeleted = 1;
