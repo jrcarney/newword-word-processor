@@ -91,6 +91,13 @@ let newWord = (() => {
       // Append the delete document button to the root application element
       newWord.rootElement.appendChild(deleteDocumentButton);
 
+      // Rename document button: enables the user to delete a document
+      let renameDocumentButton = document.createElement('button');
+      renameDocumentButton.id = `${newWord.docEditorId}-rename-document`;
+      renameDocumentButton.textContent = 'Rename document';
+      // Append the delete document button to the root application element
+      newWord.rootElement.appendChild(renameDocumentButton);
+
       // Sort documents button: enables the user to sort documents
       let sortButton = document.createElement('button');
       sortButton.id = `${newWord.docEditorId}-sort-documents`;
@@ -442,6 +449,51 @@ let newWord = (() => {
       });
     };
 
+    /**
+     * Delete the currently selected document
+     */
+    let renameDocument = () => {
+      document.querySelector(`#${newWord.docEditorId}-rename-document`).addEventListener('click', () => {
+
+        debugger
+        let docList = newWord.documentList;
+        let newDocumentName;
+
+        docList.forEach(element => {
+          console.log('elemtn is: '+element);
+
+          if(element === newWord.documentName) {
+            console.log('We have selected the doucment: '+newWord.documentName);
+            newWord.newDocumentName = window.prompt('Rename document');
+          }
+        });
+
+        let a = localStorage.getItem( `${newWord.docEditorId}-${newWord.documentName}`);
+        localStorage.setItem(`${newWord.docEditorId}-${newWord.newDocumentName}`, a );
+        localStorage.removeItem( `${newWord.docEditorId}-${newWord.documentName}` );
+
+        newWord.documentDeleted = 1;
+
+        let content = document.getElementById( newWord.docEditorContent );
+        content.innerHTML = `--> Document renamed to ${newWord.newDocumentName} <-- <br><br> select document to continue editing`;
+
+        // JC: 7/4/19
+        removeDocumentSelectContainer();
+
+        getLocalStorageItems();
+
+        // newDocumentLocalStorage(newDocumentName);
+        // @JC 10/08/18: update the document list a litle bit later so the newly added document is displayed
+        setTimeout(() => {
+          getLocalStorageItems();
+          newWord.sortOrder = 1; // Sort alphabeticaly when we delete an item
+          sortTheDocuments();
+          selectDocument();
+        }, 10);
+
+      });
+    };
+
     let sortDocList = () => {
         document.querySelector(`#${newWord.docEditorId}-sort-documents`).addEventListener('click', (ev) => {
           //newWord.sortOrder = 0;
@@ -507,6 +559,7 @@ let newWord = (() => {
         /** # Async method calls **/
         newDocument();
         deleteDocument();
+        renameDocument();
         sortDocList();
 
         console.log("Initialised app");
