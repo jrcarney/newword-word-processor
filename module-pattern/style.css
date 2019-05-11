@@ -45,6 +45,12 @@ div:focus {
   padding: 10px;
 }
 
+#newword-rename-doc-msg {
+  background-color: white;
+  padding: 10px;
+  transition: opacity 3s ease-in-out;
+}
+
 /**
  * Document select list
  */

@@ -76,6 +76,17 @@ let newWord = (() => {
       createDocumentMessage.textContent = 'Select or create a new document';
       // Append the messages to the root application element
       newWord.rootElement.appendChild(createDocumentMessage);
+
+      // pseaduo code: 
+      // goal) when a doc has been created, display a message that is dispalyed for 5 seconds
+      // 1) create the html but hide it by default
+      // 2) when doc has been renamed, display the "renamed messgage"
+      let renamedDocumentMessage = document.createElement('div');
+      renamedDocumentMessage.id = `${newWord.docEditorId}-rename-doc-msg`;
+      renamedDocumentMessage.textContent = 'Document has been renamed';
+      renamedDocumentMessage.style.display = 'none';
+      // Append the messages to the root application element
+      newWord.rootElement.appendChild(renamedDocumentMessage);
       
       // Create document button: enables the user to create a document
       let createDocument = document.createElement('button');
@@ -472,10 +483,31 @@ let newWord = (() => {
         localStorage.setItem(`${newWord.docEditorId}-${newWord.newDocumentName}`, a );
         localStorage.removeItem( `${newWord.docEditorId}-${newWord.documentName}` );
 
+        let renamedDocumentMessage = document.querySelector(`#${newWord.docEditorId}-rename-doc-msg`);
+        renamedDocumentMessage.style.display = 'block';
+
+        // JC 11/5/19: Set opacity so the css transition kicks-in
+        window.setTimeout(()=> {
+          renamedDocumentMessage.style.opacity = 0;
+        }, 1000);
+
+        // JC: 11/5/19: After doc has been renamed, remove element from the DOM and set the opacity ready for any more documents renamed
+        window.setTimeout(()=> {
+          renamedDocumentMessage.style.display = 'none';
+          renamedDocumentMessage.style.opacity = 1;
+        }, 3000);
+
+        // JC 11/5/19: Display the "Create doc" message
+        let createDocMsg = document.querySelector(`#${newWord.docEditorId}-create-doc-msg`);
+        createDocMsg.style.display = 'block';
+
+        // JC: 11/5/19: As no document selected after renaming a document, set to "No doc selected" message
+        document.getElementById( newWord.docEditorContent ).innerHTML = "No document selected";
+
         newWord.documentDeleted = 1;
 
-        let content = document.getElementById( newWord.docEditorContent );
-        content.innerHTML = `--> Document renamed to ${newWord.newDocumentName} <-- <br><br> select document to continue editing`;
+        // let content = document.getElementById( newWord.docEditorContent );
+        // content.innerHTML = `--> Document renamed to ${newWord.newDocumentName} <-- <br><br> select document to continue editing`;
 
         // JC: 7/4/19
         removeDocumentSelectContainer();
