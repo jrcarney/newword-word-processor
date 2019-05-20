@@ -71,11 +71,11 @@ let newWord = (() => {
       *******************************************************************************************************************/
     let generateHtml = () => {    
       // Message area: prompts the user to select or create a ne document
-      let createDocumentMessage = document.createElement('div');
-      createDocumentMessage.id = `${newWord.docEditorId}-create-doc-msg`;
+      let createDocumentMessage = document.querySelector(`#${newWord.docEditorId}-create-doc-msg`);
+      // createDocumentMessage.id = `${newWord.docEditorId}-create-doc-msg`;
       createDocumentMessage.textContent = 'Select or create a new document';
       // Append the messages to the root application element
-      newWord.rootElement.appendChild(createDocumentMessage);
+      // newWord.rootElement.appendChild(createDocumentMessage);
 
       // pseaduo code: 
       // goal) when a doc has been created, display a message that is dispalyed for 5 seconds
@@ -468,32 +468,36 @@ let newWord = (() => {
 
         debugger
         let docList = newWord.documentList;
-        let newDocumentName;
-        let checkInput;
+        let input;
 
         docList.forEach(element => {
           console.log('elemtn is: '+element);
 
           if(element === newWord.documentName) {
             console.log('We have selected the doucment: '+newWord.documentName);
-            let input = window.prompt('Rename document');
+            input = window.prompt('Rename document');
             
-            // If the user didnt add a new name, breakout of the loop
-            if (input === null) {              
-              checkInput = true; 
+            // If the user didnt add a new name, breakout of the loop.
+            if (input === null || input === ' ') {                   
               return;
             } else {
+              // Set the document name to the new value
               newWord.newDocumentName = input;
             }            
           }
         });
 
-        // If the user didnt add a new name, breakout of the function call (no more processing carried out by this function)
-        if(checkInput) {
+        // If a document has been selected, but no name has been added then breakout of the function call.
+        if(input === null || input === "") {
           return;
         }
 
+        // To supplement the above if statement, if no document was selected, then a null value will be set. If this is the case, then we simply return and breakout of the function call.
         let a = localStorage.getItem( `${newWord.docEditorId}-${newWord.documentName}`);
+        if(a==null) {
+          return;
+        }
+
         localStorage.setItem(`${newWord.docEditorId}-${newWord.newDocumentName}`, a );
         localStorage.removeItem( `${newWord.docEditorId}-${newWord.documentName}` );
 
