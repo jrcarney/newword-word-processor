@@ -469,15 +469,29 @@ let newWord = (() => {
         debugger
         let docList = newWord.documentList;
         let newDocumentName;
+        let checkInput;
 
         docList.forEach(element => {
           console.log('elemtn is: '+element);
 
           if(element === newWord.documentName) {
             console.log('We have selected the doucment: '+newWord.documentName);
-            newWord.newDocumentName = window.prompt('Rename document');
+            let input = window.prompt('Rename document');
+            
+            // If the user didnt add a new name, breakout of the loop
+            if (input === null) {              
+              checkInput = true; 
+              return;
+            } else {
+              newWord.newDocumentName = input;
+            }            
           }
         });
+
+        // If the user didnt add a new name, breakout of the function call (no more processing carried out by this function)
+        if(checkInput) {
+          return;
+        }
 
         let a = localStorage.getItem( `${newWord.docEditorId}-${newWord.documentName}`);
         localStorage.setItem(`${newWord.docEditorId}-${newWord.newDocumentName}`, a );
