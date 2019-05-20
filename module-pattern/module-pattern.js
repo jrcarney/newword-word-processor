@@ -71,9 +71,9 @@ let newWord = (() => {
       *******************************************************************************************************************/
     let generateHtml = () => {    
       // Message area: prompts the user to select or create a ne document
-      let createDocumentMessage = document.querySelector(`#${newWord.docEditorId}-create-doc-msg`);
-      // createDocumentMessage.id = `${newWord.docEditorId}-create-doc-msg`;
-      createDocumentMessage.textContent = 'Select or create a new document';
+      // let createDocumentMessage = document.querySelector(`#${newWord.docEditorId}-create-doc-msg`);
+      // // createDocumentMessage.id = `${newWord.docEditorId}-create-doc-msg`;
+      // createDocumentMessage.textContent = 'Select or create a new document';
       // Append the messages to the root application element
       // newWord.rootElement.appendChild(createDocumentMessage);
 
@@ -81,54 +81,60 @@ let newWord = (() => {
       // goal) when a doc has been created, display a message that is dispalyed for 5 seconds
       // 1) create the html but hide it by default
       // 2) when doc has been renamed, display the "renamed messgage"
-      let renamedDocumentMessage = document.createElement('div');
-      renamedDocumentMessage.id = `${newWord.docEditorId}-rename-doc-msg`;
-      renamedDocumentMessage.textContent = 'Document has been renamed';
+      // let renamedDocumentMessage = document.createElement('div');
+      // renamedDocumentMessage.id = `${newWord.docEditorId}-rename-doc-msg`;
+      // renamedDocumentMessage.textContent = 'Document has been renamed';
+      // renamedDocumentMessage.style.display = 'none';
+      // // Append the messages to the root application element
+      // newWord.rootElement.appendChild(renamedDocumentMessage);
+
+      let renamedDocumentMessage = document.querySelector(`#${newWord.docEditorId}-rename-doc-msg`);
       renamedDocumentMessage.style.display = 'none';
-      // Append the messages to the root application element
-      newWord.rootElement.appendChild(renamedDocumentMessage);
       
       // Create document button: enables the user to create a document
-      let createDocument = document.createElement('button');
-      createDocument.id = `${newWord.docEditorId}-create-document`;
-      createDocument.textContent = 'Create new document';
-      // Append the new document button to the root application element
-      newWord.rootElement.appendChild(createDocument);
+      // let createDocument = document.createElement('button');
+      // createDocument.id = `${newWord.docEditorId}-create-document`;
+      // createDocument.textContent = 'Create new document';
+      // // Append the new document button to the root application element
+      // newWord.rootElement.appendChild(createDocument);
             
       // Delete document button: enables the user to delete a document
-      let deleteDocumentButton = document.createElement('button');
-      deleteDocumentButton.id = `${newWord.docEditorId}-delete-document`;
-      deleteDocumentButton.textContent = 'Delete document';
-      // Append the delete document button to the root application element
-      newWord.rootElement.appendChild(deleteDocumentButton);
+      // let deleteDocumentButton = document.createElement('button');
+      // deleteDocumentButton.id = `${newWord.docEditorId}-delete-document`;
+      // deleteDocumentButton.textContent = 'Delete document';
+      // // Append the delete document button to the root application element
+      // newWord.rootElement.appendChild(deleteDocumentButton);
 
       // Rename document button: enables the user to delete a document
-      let renameDocumentButton = document.createElement('button');
-      renameDocumentButton.id = `${newWord.docEditorId}-rename-document`;
-      renameDocumentButton.textContent = 'Rename document';
-      // Append the delete document button to the root application element
-      newWord.rootElement.appendChild(renameDocumentButton);
+      // let renameDocumentButton = document.createElement('button');
+      // renameDocumentButton.id = `${newWord.docEditorId}-rename-document`;
+      // renameDocumentButton.textContent = 'Rename document';
+      // // Append the delete document button to the root application element
+      // newWord.rootElement.appendChild(renameDocumentButton);
 
       // Sort documents button: enables the user to sort documents
-      let sortButton = document.createElement('button');
-      sortButton.id = `${newWord.docEditorId}-sort-documents`;
-      sortButton.textContent = 'Sort';
-      // Append the new document button to the root application element
-      newWord.rootElement.appendChild(sortButton);
+      // let sortButton = document.createElement('button');
+      // sortButton.id = `${newWord.docEditorId}-sort-documents`;
+      // sortButton.textContent = 'Sort';
+      // // Append the new document button to the root application element
+      // newWord.rootElement.appendChild(sortButton);
 
       // create a new div element
-      let documentContainer = document.createElement("div");
+      // let documentContainer = document.createElement("div");
 
       // See https://developer.mozilla.org/en-US/docs/Web/API/Element/id for how to use the id property directly
       //documentContainer.id = 'document-container';
-      documentContainer.setAttribute('id',`${newWord.docEditorId}-document-container`)
+      // documentContainer.setAttribute('id',`${newWord.docEditorId}-document-container`)
+      // documentContainer.style.display = 'none';
+
+      let documentContainer = document.querySelector(`#${newWord.docEditorId}-document-container`);
       documentContainer.style.display = 'none';
 
       // # See readme: Add string of HTML inside another element
-      documentContainer.innerHTML += `<div id="${newWord.docEditorToolbar}"></div><div id="${newWord.docEditorContent}" contenteditable="true"></div>`;
+      //documentContainer.innerHTML += `<div id="${newWord.docEditorToolbar}"></div><div id="${newWord.docEditorContent}" contenteditable="true"></div>`;
 
       // Append the text area to the root application element
-      newWord.rootElement.appendChild(documentContainer);
+      //newWord.rootElement.appendChild(documentContainer);
 
       createToolbarButtons();
     };

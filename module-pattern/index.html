@@ -8,7 +8,19 @@
 <body id="body">
   <!-- @JC 30/8/18: the root element -->
   <div id="newword-wrapper">
-    <div id="newword-create-doc-msg"></div>
+    
+    <div id="newword-create-doc-msg">Select or create a new document</div>
+    <div id="newword-rename-doc-msg">Document has been renamed</div>
+    
+    <button id="newword-create-document">Create new document</button>
+    <button id="newword-rename-document">Rename document</button>    
+    <button id="newword-delete-document">Delete document</button>
+    <button id="newword-sort-documents">Sort</button>
+
+    <div id="newword-document-container">
+      <div id="newword-toolbar"></div>
+      <div id="newword-content" contenteditable="true"></div>
+    </div>
 
   </div>
 </body>
